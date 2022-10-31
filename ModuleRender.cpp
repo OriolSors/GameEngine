@@ -14,7 +14,6 @@ ModuleRender::ModuleRender()
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); // we want a double buffer
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24); // we want to have a depth buffer with 24 bits
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8); // we want to have a stencil buffer with 8 bits
-
 }
 
 // Destructor
@@ -24,18 +23,7 @@ ModuleRender::~ModuleRender()
 
 // Called before render is available
 bool ModuleRender::Init()
-{
-
-	/*
-	AQUI VA EL VBO INIT
-		glGenBuffers(1, &vbo);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo); // set vbo active
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vtx_data), vtx_data, GL_STATIC_DRAW)
-	*/
-
-
-
-
+{	
 	LOG("Creating Renderer context");
 
 	// Create an OpenGL context associated with the window.
@@ -61,15 +49,17 @@ bool ModuleRender::Init()
 
 update_status ModuleRender::PreUpdate()
 {
+	
 	int* w = nullptr;
 	int* h = nullptr;
 
 	SDL_GetWindowSize(App->window->window, w, h);
 	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
 
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClearColor(0, 0, 0, 1);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
 
 	return UPDATE_CONTINUE;
 }
@@ -77,8 +67,6 @@ update_status ModuleRender::PreUpdate()
 // Called every draw update
 update_status ModuleRender::Update()
 {
-
-	//AQUI VA EL DRAW DE VBO
 	return UPDATE_CONTINUE;
 }
 
@@ -91,12 +79,6 @@ update_status ModuleRender::PostUpdate()
 // Called before quitting
 bool ModuleRender::CleanUp()
 {
-
-
-	/*
-	* AQUI VA EL DELETE VBO
-	* glDeleteBuffers(1, &vbo);
-	*/
 	LOG("Destroying renderer");
 
 	//Destroy window
