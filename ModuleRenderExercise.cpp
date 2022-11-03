@@ -28,7 +28,6 @@ bool ModuleRenderExercise::Init()
     unsigned f_shader = App->program->CompileShader(GL_FRAGMENT_SHADER, f_shader_file);
 
     program = App->program->CreateProgram(v_shader, f_shader);
-    //CreateTriangleVBO();
 
     return true;
 }
@@ -41,7 +40,7 @@ update_status ModuleRenderExercise::Update()
 
 bool ModuleRenderExercise::CleanUp()
 {
-    LOG("Destroying VBO");
+    ENGINE_LOG("Destroying VBO");
 
     DestroyVBO();
 

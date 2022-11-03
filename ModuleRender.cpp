@@ -24,20 +24,20 @@ ModuleRender::~ModuleRender()
 // Called before render is available
 bool ModuleRender::Init()
 {	
-	LOG("Creating Renderer context");
+	ENGINE_LOG("Creating Renderer context");
 
 	// Create an OpenGL context associated with the window.
 	context = SDL_GL_CreateContext(App->window->window);
 
 	GLenum err = glewInit();
 	// � check for errors
-	LOG("Using Glew %s", glewGetString(GLEW_VERSION));
+	ENGINE_LOG("Using Glew %s", glewGetString(GLEW_VERSION));
 	// Should be 2.0
 
-	LOG("Vendor: %s", glGetString(GL_VENDOR));
-	LOG("Renderer: %s", glGetString(GL_RENDERER));
-	LOG("OpenGL version supported %s", glGetString(GL_VERSION));
-	LOG("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	ENGINE_LOG("Vendor: %s", glGetString(GL_VENDOR));
+	ENGINE_LOG("Renderer: %s", glGetString(GL_RENDERER));
+	ENGINE_LOG("OpenGL version supported %s", glGetString(GL_VERSION));
+	ENGINE_LOG("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
 	glEnable(GL_DEPTH_TEST); // Enable depth test
 	glEnable(GL_CULL_FACE); // Enable cull backward faces
@@ -53,7 +53,7 @@ update_status ModuleRender::PreUpdate()
 	int h;
 
 	SDL_GetWindowSize(App->window->window, &w, &h);
-	glViewport(0, 0, (GLsizei)w, SCREEN_HEIGHT);
+	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
 
 	glClearColor(0, 0, 0, 1);
 
@@ -78,7 +78,7 @@ update_status ModuleRender::PostUpdate()
 // Called before quitting
 bool ModuleRender::CleanUp()
 {
-	LOG("Destroying renderer");
+	ENGINE_LOG("Destroying renderer");
 
 	//Destroy window
 	SDL_GL_DeleteContext(context);
