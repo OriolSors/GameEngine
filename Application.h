@@ -10,6 +10,7 @@ class ModuleTextures;
 class ModuleInput;
 class ModuleProgram;
 class ModuleRenderExercise;
+class ModuleDebugDraw;
 
 class Application
 {
@@ -28,6 +29,7 @@ public:
 	ModuleInput* input = nullptr;
 	ModuleProgram* program = nullptr;
 	ModuleRenderExercise* exercise = nullptr;
+	ModuleDebugDraw* debugDraw = nullptr;
 private:
 
 	std::list<Module*> modules;
