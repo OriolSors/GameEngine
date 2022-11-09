@@ -49,6 +49,7 @@ bool ModuleRender::Init()
 
 update_status ModuleRender::PreUpdate()
 {
+
 	int w;
 	int h;
 

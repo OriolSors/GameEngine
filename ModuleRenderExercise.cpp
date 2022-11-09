@@ -3,6 +3,7 @@
 #include "ModuleRender.h"
 #include "ModuleProgram.h"
 #include "ModuleRenderExercise.h"
+#include "ModuleDebugDraw.h"
 #include "GL\glew.h"
 #include "SDL.h"
 #include "Game/MathGeoLib/Geometry/Frustum.h"
@@ -49,7 +50,6 @@ bool ModuleRenderExercise::CleanUp()
 }
 
 void ModuleRenderExercise::CreateTriangleVBO() {
-    float4x4 proj;
     float vtx_data[] = { -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f };
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo); // set vbo active
@@ -61,29 +61,34 @@ void ModuleRenderExercise::CreateTriangleVBO() {
 
 void ModuleRenderExercise::RenderVBO()
 {
+    float aspect = float(SCREEN_WIDTH) / float(SCREEN_HEIGHT);
     Frustum frustum;
     //frustum.type = FrustumType::PerspectiveFrustum;
     frustum.SetKind(FrustumProjectiveSpace::FrustumSpaceGL, FrustumHandedness::FrustumRightHanded);
-    frustum.SetPos(float3::zero);
+    frustum.SetPos(float3(0.0f, 0.0f, 0.0f));
     frustum.SetFront(-float3::unitZ);
     frustum.SetUp(float3::unitY);
     frustum.SetViewPlaneDistances(0.1f, 100.0f);
-    frustum.SetPerspective(2.f * atanf(tanf(math::pi / 4.0f * 0.5f) * SCREEN_WIDTH/SCREEN_HEIGHT), math::pi / 4.0f);
+    frustum.SetPerspective(2.f * atanf(tanf(math::pi / 4.0f * 0.5f) * aspect), math::pi / 4.0f);
 
     float4x4 proj = frustum.ProjectionMatrix();
 
     float4x4 model = float4x4::FromTRS(float3(2.0f, 0.0f, 0.0f),
         float4x4::RotateZ(pi / 4.0f),
         float3(2.0f, 1.0f, 0.0f));
-    float4x4 view = float4x4::LookAt(float3(0.0f, 4.0f, 8.0f), float3(0.0f, 0.0f, 0.0f), float3::unitY, float3::unitY);
+    float4x4 view = frustum.ViewMatrix();
 
-    glClearColor(0, 0, 0, 1);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glClearColor(0, 0, 0, 1);
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
     glUseProgram(program);
     glUniformMatrix4fv(0, 1, GL_TRUE, &model[0][0]);
     glUniformMatrix4fv(1, 1, GL_TRUE, &view[0][0]);
     glUniformMatrix4fv(2, 1, GL_TRUE, &proj[0][0]);
+
     glDrawArrays(GL_TRIANGLES, 0, 3);
+    App->debugDraw->Draw(proj, view, SCREEN_WIDTH, SCREEN_HEIGHT);
+    
 }
 
 void ModuleRenderExercise::DestroyVBO()
