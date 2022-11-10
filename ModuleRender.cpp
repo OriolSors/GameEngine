@@ -49,14 +49,17 @@ bool ModuleRender::Init()
 
 update_status ModuleRender::PreUpdate()
 {
-
+	/*
 	int w;
 	int h;
 
 	SDL_GetWindowSize(App->window->window, &w, &h);
 	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
+	*/
 
-	glClearColor(0, 0, 0, 1);
+	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+	//glClearColor(0, 0, 0, 1);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	

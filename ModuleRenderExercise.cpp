@@ -20,9 +20,6 @@ ModuleRenderExercise::~ModuleRenderExercise()
 
 bool ModuleRenderExercise::Init()
 {  
-    
-    CreateTriangleVBO();
-
     char* v_shader_file = App->program->Load("HelloWorld_vs.glsl");
     char* f_shader_file = App->program->Load("HelloWorld_fs.glsl");
 
@@ -31,12 +28,14 @@ bool ModuleRenderExercise::Init()
 
     program = App->program->CreateProgram(v_shader, f_shader);
 
+    CreateTriangleVBO();
+
     return true;
 }
 
 update_status ModuleRenderExercise::Update()
 {
-    RenderVBO();
+    RenderTriangle();
     return UPDATE_CONTINUE;
 }
 
@@ -54,22 +53,26 @@ void ModuleRenderExercise::CreateTriangleVBO() {
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo); // set vbo active
     glBufferData(GL_ARRAY_BUFFER, sizeof(vtx_data), vtx_data, GL_STATIC_DRAW);
+
+    /*
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
+    */
+
 }
 
-void ModuleRenderExercise::RenderVBO()
+void ModuleRenderExercise::RenderTriangle()
 {
     float aspect = float(SCREEN_WIDTH) / float(SCREEN_HEIGHT);
     Frustum frustum;
-    //frustum.type = FrustumType::PerspectiveFrustum;
     frustum.SetKind(FrustumProjectiveSpace::FrustumSpaceGL, FrustumHandedness::FrustumRightHanded);
-    frustum.SetPos(float3(0.0f, 0.0f, 0.0f));
+    frustum.SetPos(float3(0.0f, 2.0f, 10.0f));
     frustum.SetFront(-float3::unitZ);
     frustum.SetUp(float3::unitY);
     frustum.SetViewPlaneDistances(0.1f, 100.0f);
-    frustum.SetPerspective(2.f * atanf(tanf(math::pi / 4.0f * 0.5f) * aspect), math::pi / 4.0f);
+    frustum.SetPerspective(2.f * atanf(tanf(VFOV * 0.5f) * aspect), VFOV);
+
 
     float4x4 proj = frustum.ProjectionMatrix();
 
@@ -78,20 +81,27 @@ void ModuleRenderExercise::RenderVBO()
         float3(2.0f, 1.0f, 0.0f));
     float4x4 view = frustum.ViewMatrix();
 
-    //glClearColor(0, 0, 0, 1);
-    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor(0.15f, 0.15f, 0.15f, 1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     glUseProgram(program);
-    glUniformMatrix4fv(0, 1, GL_TRUE, &model[0][0]);
+    
+    glUniformMatrix4fv(0, 1, GL_TRUE, &proj[0][0]);
     glUniformMatrix4fv(1, 1, GL_TRUE, &view[0][0]);
-    glUniformMatrix4fv(2, 1, GL_TRUE, &proj[0][0]);
+    glUniformMatrix4fv(2, 1, GL_TRUE, &model[0][0]);
 
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    
     glDrawArrays(GL_TRIANGLES, 0, 3);
-    App->debugDraw->Draw(proj, view, SCREEN_WIDTH, SCREEN_HEIGHT);
+    App->debugDraw->Draw(view, proj, SCREEN_WIDTH, SCREEN_HEIGHT);
+    
     
 }
 
 void ModuleRenderExercise::DestroyVBO()
 {
 	glDeleteBuffers(1, &vbo);
+    glDeleteProgram(program);
 }

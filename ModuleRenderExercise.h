@@ -12,7 +12,7 @@ public:
     bool CleanUp();
 
     void CreateTriangleVBO();
-    void RenderVBO();
+    void RenderTriangle();
     void DestroyVBO();
 
 private:
