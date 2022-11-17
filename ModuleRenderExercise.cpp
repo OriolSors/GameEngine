@@ -4,6 +4,7 @@
 #include "ModuleProgram.h"
 #include "ModuleRenderExercise.h"
 #include "ModuleDebugDraw.h"
+#include "ModuleCamera.h"
 #include "GL\glew.h"
 #include "SDL.h"
 #include "Game/MathGeoLib/Geometry/Frustum.h"
@@ -64,6 +65,7 @@ void ModuleRenderExercise::CreateTriangleVBO() {
 
 void ModuleRenderExercise::RenderTriangle()
 {
+    /*
     float aspect = float(SCREEN_WIDTH) / float(SCREEN_HEIGHT);
     Frustum frustum;
     frustum.SetKind(FrustumProjectiveSpace::FrustumSpaceGL, FrustumHandedness::FrustumRightHanded);
@@ -73,6 +75,7 @@ void ModuleRenderExercise::RenderTriangle()
     frustum.SetViewPlaneDistances(0.1f, 100.0f);
     frustum.SetPerspective(2.f * atanf(tanf(VFOV * 0.5f) * aspect), VFOV);
 
+    
 
     float4x4 proj = frustum.ProjectionMatrix();
 
@@ -80,6 +83,16 @@ void ModuleRenderExercise::RenderTriangle()
         float4x4::RotateZ(pi / 4.0f),
         float3(2.0f, 1.0f, 0.0f));
     float4x4 view = frustum.ViewMatrix();
+
+    */
+    App->camera->Translate(vec(0.01f, 0.0f, 0.0f));
+
+    float4x4 proj = App->camera->GetProjectionMatrix();
+    float4x4 view = App->camera->GetViewMatrix();
+
+    float4x4 model = float4x4::FromTRS(float3(2.0f, 0.0f, 0.0f),
+        float4x4::RotateZ(pi / 4.0f),
+        float3(2.0f, 1.0f, 0.0f));
 
     glClearColor(0.15f, 0.15f, 0.15f, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

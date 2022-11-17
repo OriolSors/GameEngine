@@ -1,5 +1,6 @@
 #pragma once
 #include "Module.h"
+#include "Game/MathGeoLib/Geometry/frustum.h"
 #include "Game/MathGeoLib/Math/float4x4.h"
 
 class ModuleCamera :
@@ -18,7 +19,9 @@ public:
 
 	float4x4 GetViewMatrix();
 	float4x4 GetProjectionMatrix();
-	float4x4 GetModelMatrix();
+
+	void Translate(vec direction);
+	void Rotate();
 
 private:
 	Frustum frustum;
