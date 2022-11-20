@@ -85,7 +85,6 @@ void ModuleRenderExercise::RenderTriangle()
     float4x4 view = frustum.ViewMatrix();
 
     */
-    App->camera->Translate(vec(0.01f, 0.0f, 0.0f));
 
     float4x4 proj = App->camera->GetProjectionMatrix();
     float4x4 view = App->camera->GetViewMatrix();

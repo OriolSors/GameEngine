@@ -27,6 +27,13 @@ bool ModuleInput::Init()
 	return ret;
 }
 
+update_status ModuleInput::PreUpdate() 
+{
+    keyboard = SDL_GetKeyboardState(NULL);
+
+    return UPDATE_CONTINUE;
+}
+
 // Called every draw update
 update_status ModuleInput::Update()
 {
@@ -45,8 +52,6 @@ update_status ModuleInput::Update()
         }
     }
 
-    keyboard = SDL_GetKeyboardState(NULL);
-
     return UPDATE_CONTINUE;
 }
 
@@ -57,3 +62,10 @@ bool ModuleInput::CleanUp()
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
 }
+
+Uint8 ModuleInput::GetKey(int key)
+{
+    return keyboard[key];
+}
+
+

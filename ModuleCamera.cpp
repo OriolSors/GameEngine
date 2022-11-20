@@ -1,6 +1,12 @@
+#include "Application.h"
+#include "ModuleInput.h"
 #include "ModuleCamera.h"
 #include "Game/MathGeoLib/Math/float3x3.h"
+#include "Game/MathGeoLib/Math/Quat.h"
 #include "GL\glew.h"
+#include "SDL.h"
+#include <cstring>
+#include <iostream>
 
 ModuleCamera::ModuleCamera()
 {
@@ -25,8 +31,8 @@ bool ModuleCamera::Init()
 	frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
 	frustum.SetViewPlaneDistances(0.1f, 200.0f);
 	frustum.SetHorizontalFovAndAspectRatio(DegToRad(90.0f), 1.3f);
-	frustum.SetPos(float3(0.0f, 1.0f, -12.0f));
-	frustum.SetFront(float3::unitZ);
+	frustum.SetPos(float3(0.0f, 1.0f, 12.0f));
+	frustum.SetFront(-float3::unitZ);
 	frustum.SetUp(float3::unitY);
 	
 
@@ -40,6 +46,29 @@ update_status ModuleCamera::PreUpdate()
 
 update_status ModuleCamera::Update()
 {
+	//----- TRANSLATION -----
+	cameraSpeed = 1.0f;
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT)) cameraSpeed = 3.0f;
+
+	vec direction(vec::zero);
+	if (App->input->GetKey(SDL_SCANCODE_W)) direction.z = -0.001f;
+	if (App->input->GetKey(SDL_SCANCODE_S)) direction.z = 0.001f;
+	if (App->input->GetKey(SDL_SCANCODE_A)) direction.x = -0.001f;
+	if (App->input->GetKey(SDL_SCANCODE_D)) direction.x = 0.001f;
+	if (App->input->GetKey(SDL_SCANCODE_E)) direction.y = -0.001f;
+	if (App->input->GetKey(SDL_SCANCODE_Q)) direction.y = 0.001f;
+
+	Translate(direction * cameraSpeed);
+
+	//----- ROTATION -----
+
+	vec rotation(vec::zero);
+	if (App->input->GetKey(SDL_SCANCODE_UP)) rotation.x = 0.001f;
+	if (App->input->GetKey(SDL_SCANCODE_DOWN)) rotation.x = -0.001f;
+	if (App->input->GetKey(SDL_SCANCODE_RIGHT)) rotation.y = -0.001f;
+	if (App->input->GetKey(SDL_SCANCODE_LEFT)) rotation.y = 0.001f;
+	
+	Rotate(rotation);
 
 	return UPDATE_CONTINUE;
 }
@@ -64,16 +93,24 @@ float4x4 ModuleCamera::GetProjectionMatrix()
 	return float4x4(frustum.ProjectionMatrix());
 }
 
-void ModuleCamera::Translate(vec direction) {
-	frustum.SetPos(frustum.Pos() + GetViewMatrix().Float3x3Part().MulDir(direction));
+void ModuleCamera::Translate(const vec& direction) 
+{
+	frustum.SetPos(frustum.Pos() + frustum.WorldMatrix().Float3x3Part().MulDir(direction));
+
+	/*
+	vec viewDirection (frustum.WorldRight().Normalized() * direction.x + frustum.Up().Normalized() * direction.y - frustum.Front().Normalized() * direction.z);
+	frustum.SetPos(frustum.Pos() + viewDirection);
+	*/
 }
 
 
-void ModuleCamera::Rotate() {
-	float3x3 rotationDeltaMatrix;
+void ModuleCamera::Rotate(const vec& rotation) {
+	Quat qyRotation = Quat::RotateY(rotation.y);
+	Quat qxRotation = Quat::RotateAxisAngle(frustum.WorldRight(), rotation.x);
+	Quat qRotation = qxRotation.Mul(qyRotation);
 
 	vec oldFront = frustum.Front().Normalized();
-	frustum.SetFront(rotationDeltaMatrix.MulDir(oldFront));
+	frustum.SetFront(qRotation *oldFront);
 	vec oldUp = frustum.Up().Normalized();
-	frustum.SetUp(rotationDeltaMatrix.MulDir(oldUp));
+	frustum.SetUp(qRotation * oldUp);
 }

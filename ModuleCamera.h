@@ -20,8 +20,11 @@ public:
 	float4x4 GetViewMatrix();
 	float4x4 GetProjectionMatrix();
 
-	void Translate(vec direction);
-	void Rotate();
+	void Translate(const vec& direction);
+	void Rotate(const vec& rotation);
+
+public:
+	float cameraSpeed = 1.0f;
 
 private:
 	Frustum frustum;
