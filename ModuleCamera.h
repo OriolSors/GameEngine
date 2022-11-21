@@ -25,6 +25,7 @@ public:
 
 public:
 	float cameraSpeed = 1.0f;
+	float zoomSpeed = 100.0f;
 
 private:
 	Frustum frustum;

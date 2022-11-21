@@ -3,6 +3,7 @@
 #include "ModuleInput.h"
 #include "ModuleRender.h"
 #include "SDL/include/SDL.h"
+#include "Game/ImGui/imgui_impl_sdl.h"
 
 ModuleInput::ModuleInput()
 {}
@@ -30,15 +31,17 @@ bool ModuleInput::Init()
 update_status ModuleInput::PreUpdate() 
 {
     keyboard = SDL_GetKeyboardState(NULL);
-
     return UPDATE_CONTINUE;
 }
 
 // Called every draw update
 update_status ModuleInput::Update()
 {
-    SDL_Event sdlEvent;
 
+    SDL_Event sdlEvent;
+    ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
+
+    mouse = 0;
     while (SDL_PollEvent(&sdlEvent) != 0)
     {
         switch (sdlEvent.type)
@@ -48,6 +51,9 @@ update_status ModuleInput::Update()
             case SDL_WINDOWEVENT:
                 if (sdlEvent.window.event == SDL_WINDOWEVENT_RESIZED || sdlEvent.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
                     App->renderer->WindowResized(sdlEvent.window.data1, sdlEvent.window.data2);
+                break;
+            case SDL_MOUSEWHEEL:
+                mouse = sdlEvent.wheel.y;
                 break;
         }
     }
@@ -66,6 +72,11 @@ bool ModuleInput::CleanUp()
 Uint8 ModuleInput::GetKey(int key)
 {
     return keyboard[key];
+}
+
+int ModuleInput::GetWheel()
+{
+    return mouse;
 }
 
 

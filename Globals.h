@@ -14,8 +14,8 @@ enum update_status
 };
 
 // Configuration -----------
-#define SCREEN_WIDTH 1080
-#define SCREEN_HEIGHT 920
+#define SCREEN_WIDTH 1000
+#define SCREEN_HEIGHT 700
 #define VFOV math::pi / 4.0f
 #define FULLSCREEN false
 #define VSYNC true

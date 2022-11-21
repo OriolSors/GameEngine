@@ -51,22 +51,31 @@ update_status ModuleCamera::Update()
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT)) cameraSpeed = 3.0f;
 
 	vec direction(vec::zero);
-	if (App->input->GetKey(SDL_SCANCODE_W)) direction.z = -0.001f;
-	if (App->input->GetKey(SDL_SCANCODE_S)) direction.z = 0.001f;
-	if (App->input->GetKey(SDL_SCANCODE_A)) direction.x = -0.001f;
-	if (App->input->GetKey(SDL_SCANCODE_D)) direction.x = 0.001f;
-	if (App->input->GetKey(SDL_SCANCODE_E)) direction.y = -0.001f;
-	if (App->input->GetKey(SDL_SCANCODE_Q)) direction.y = 0.001f;
+	if (App->input->GetKey(SDL_SCANCODE_W)) direction.z = -0.01f;
+	if (App->input->GetKey(SDL_SCANCODE_S)) direction.z = 0.01f;
+	if (App->input->GetKey(SDL_SCANCODE_A)) direction.x = -0.01f;
+	if (App->input->GetKey(SDL_SCANCODE_D)) direction.x = 0.01f;
+	if (App->input->GetKey(SDL_SCANCODE_E)) direction.y = -0.01f;
+	if (App->input->GetKey(SDL_SCANCODE_Q)) direction.y = 0.01f;
 
 	Translate(direction * cameraSpeed);
+
+	//----- ZOOM -----
+
+	vec zoom(vec::zero);
+	if (App->input->GetWheel() > 0) zoom.z = -0.01f;
+	if (App->input->GetWheel() < 0) zoom.z = 0.01f;
+
+	ENGINE_LOG("%d",App->input->GetWheel());
+	Translate(zoom * zoomSpeed);
 
 	//----- ROTATION -----
 
 	vec rotation(vec::zero);
-	if (App->input->GetKey(SDL_SCANCODE_UP)) rotation.x = 0.001f;
-	if (App->input->GetKey(SDL_SCANCODE_DOWN)) rotation.x = -0.001f;
-	if (App->input->GetKey(SDL_SCANCODE_RIGHT)) rotation.y = -0.001f;
-	if (App->input->GetKey(SDL_SCANCODE_LEFT)) rotation.y = 0.001f;
+	if (App->input->GetKey(SDL_SCANCODE_UP)) rotation.x = 0.01f;
+	if (App->input->GetKey(SDL_SCANCODE_DOWN)) rotation.x = -0.01f;
+	if (App->input->GetKey(SDL_SCANCODE_RIGHT)) rotation.y = -0.01f;
+	if (App->input->GetKey(SDL_SCANCODE_LEFT)) rotation.y = 0.01f;
 	
 	Rotate(rotation);
 
@@ -103,9 +112,15 @@ void ModuleCamera::Translate(const vec& direction)
 	*/
 }
 
-
 void ModuleCamera::Rotate(const vec& rotation) {
-	Quat qyRotation = Quat::RotateY(rotation.y);
+	float radY = rotation.y;
+	if (radY < 0.0f) {
+		radY = 0.0f;
+	}
+	else if (radY > 1.5707f) {
+		radY = 1.5707f;
+	}
+	Quat qyRotation = Quat::RotateY(radY);
 	Quat qxRotation = Quat::RotateAxisAngle(frustum.WorldRight(), rotation.x);
 	Quat qRotation = qxRotation.Mul(qyRotation);
 
