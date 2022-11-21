@@ -152,6 +152,7 @@
     <ClCompile Include="Game\ImGui\imgui_draw.cpp" />
     <ClCompile Include="Game\ImGui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Game\ImGui\imgui_impl_sdl.cpp" />
+    <ClCompile Include="Game\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Game\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Game\MathGeoLib\Algorithm\GJK.cpp" />
     <ClCompile Include="Game\MathGeoLib\Algorithm\GJK2D.cpp" />
