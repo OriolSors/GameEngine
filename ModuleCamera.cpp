@@ -113,14 +113,8 @@ void ModuleCamera::Translate(const vec& direction)
 }
 
 void ModuleCamera::Rotate(const vec& rotation) {
-	float radY = rotation.y;
-	if (radY < 0.0f) {
-		radY = 0.0f;
-	}
-	else if (radY > 1.5707f) {
-		radY = 1.5707f;
-	}
-	Quat qyRotation = Quat::RotateY(radY);
+	
+	Quat qyRotation = Quat::RotateY(rotation.y);
 	Quat qxRotation = Quat::RotateAxisAngle(frustum.WorldRight(), rotation.x);
 	Quat qRotation = qxRotation.Mul(qyRotation);
 

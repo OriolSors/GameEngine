@@ -38,7 +38,6 @@ update_status ModuleEditor::PreUpdate()
     ImGui_ImplSDL2_NewFrame(App->window->window);
     ImGui::NewFrame();
 
-    ImGui::ShowDemoWindow();
     return UPDATE_CONTINUE;
 }
 
