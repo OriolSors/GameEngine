@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleRender.h"
 #include "ModuleProgram.h"
+#include "ModuleWindow.h"
 #include "ModuleRenderExercise.h"
 #include "ModuleDebugDraw.h"
 #include "ModuleCamera.h"
@@ -107,7 +108,13 @@ void ModuleRenderExercise::RenderTriangle()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
     
     glDrawArrays(GL_TRIANGLES, 0, 3);
-    App->debugDraw->Draw(view, proj, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+    int w;
+    int h;
+
+    SDL_GetWindowSize(App->window->window, &w, &h);
+
+    App->debugDraw->Draw(view, proj, w, h);
     
     
 }

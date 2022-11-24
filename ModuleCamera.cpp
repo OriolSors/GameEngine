@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include "ModuleCamera.h"
+#include "ModuleWindow.h"
 #include "Game/MathGeoLib/Math/float3x3.h"
 #include "Game/MathGeoLib/Math/Quat.h"
 #include "GL\glew.h"
@@ -102,6 +103,34 @@ float4x4 ModuleCamera::GetProjectionMatrix()
 	return float4x4(frustum.ProjectionMatrix());
 }
 
+float ModuleCamera::GetDistanceNearClippingPlane() {
+	return frustum.NearPlaneDistance();
+}
+
+float ModuleCamera::GetDistanceFarClippingPlane() {
+	return frustum.FarPlaneDistance();
+}
+
+float ModuleCamera::GetHorizontalFOV()
+{
+	return RadToDeg(frustum.HorizontalFov());
+}
+
+float ModuleCamera::GetAspectRatio()
+{
+	return frustum.AspectRatio();
+}
+
+float3 ModuleCamera::GetPos()
+{
+	return frustum.Pos();
+}
+
+float ModuleCamera::GetRotationSpeed()
+{
+	return rotationSpeed;
+}
+
 void ModuleCamera::Translate(const vec& direction) 
 {
 	frustum.SetPos(frustum.Pos() + frustum.WorldMatrix().Float3x3Part().MulDir(direction));
@@ -114,12 +143,47 @@ void ModuleCamera::Translate(const vec& direction)
 
 void ModuleCamera::Rotate(const vec& rotation) {
 	
-	Quat qyRotation = Quat::RotateY(rotation.y);
-	Quat qxRotation = Quat::RotateAxisAngle(frustum.WorldRight(), rotation.x);
+	Quat qyRotation = Quat::RotateY(rotation.y * rotationSpeed);
+	Quat qxRotation = Quat::RotateAxisAngle(frustum.WorldRight(), rotation.x * rotationSpeed);
 	Quat qRotation = qxRotation.Mul(qyRotation);
 
 	vec oldFront = frustum.Front().Normalized();
 	frustum.SetFront(qRotation *oldFront);
 	vec oldUp = frustum.Up().Normalized();
 	frustum.SetUp(qRotation * oldUp);
+}
+
+void ModuleCamera::SetHorizontalFOV(float hFOV)
+{
+	float hFOVRadians = DegToRad(hFOV);
+
+	int w;
+	int h;
+
+	SDL_GetWindowSize(App->window->window, &w, &h);
+
+	float aspect = float(w) / float(h);
+	frustum.SetHorizontalFovAndAspectRatio(hFOVRadians, aspect);
+}
+
+void ModuleCamera::SetAspectRatio(float aspectRatio)
+{
+	float hFOV = frustum.HorizontalFov();
+	float vFOV = 2.f * atanf(aspectRatio * tanf(hFOV * 0.5f));
+	frustum.SetPerspective(hFOV, vFOV);
+}
+
+void ModuleCamera::SetPlaneDistances(float distanceNear, float distanceFar)
+{
+	frustum.SetViewPlaneDistances(distanceNear, distanceFar);
+}
+
+void ModuleCamera::SetPosition(const float3& position)
+{
+	frustum.SetPos(position);
+}
+
+void ModuleCamera::SetRotationSpeed(float rotationSpeed)
+{
+	this->rotationSpeed = rotationSpeed;
 }

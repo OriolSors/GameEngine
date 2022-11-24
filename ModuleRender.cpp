@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleRender.h"
 #include "ModuleWindow.h"
+#include "ModuleCamera.h"
 #include "SDL.h"
 #include "GL\glew.h"
 
@@ -49,15 +50,15 @@ bool ModuleRender::Init()
 
 update_status ModuleRender::PreUpdate()
 {
-	/*
+	
 	int w;
 	int h;
 
 	SDL_GetWindowSize(App->window->window, &w, &h);
 	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
-	*/
+	
 
-	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	//glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	//glClearColor(0, 0, 0, 1);
 
@@ -92,4 +93,5 @@ bool ModuleRender::CleanUp()
 
 void ModuleRender::WindowResized(unsigned width, unsigned height)
 {
+	App->camera->SetAspectRatio(width / height);
 }

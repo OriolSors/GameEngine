@@ -16,8 +16,10 @@ enum update_status
 // Configuration -----------
 #define SCREEN_WIDTH 1000
 #define SCREEN_HEIGHT 700
-#define VFOV math::pi / 4.0f
 #define FULLSCREEN false
+#define BORDERLESS false
+#define RESIZABLE true
+#define FULLSCREEN_DESKTOP false
 #define VSYNC true
 #define TITLE "Super Awesome Engine"
 #define GLSL_VERSION "#version 440"
