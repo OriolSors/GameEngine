@@ -19,12 +19,26 @@ public:
 
 	float4x4 GetViewMatrix();
 	float4x4 GetProjectionMatrix();
+	float GetDistanceNearClippingPlane();
+	float GetDistanceFarClippingPlane();
+	float GetHorizontalFOV();
+	float GetAspectRatio();
+	float3 GetPos();
+	float GetRotationSpeed();
 
 	void Translate(const vec& direction);
 	void Rotate(const vec& rotation);
 
-public:
+	void SetHorizontalFOV(float hFOV);
+	void SetAspectRatio(float aspectRatio);
+	void SetPlaneDistances(float distanceNear, float distanceFar);
+	void SetPosition(const float3& position);
+	void SetRotationSpeed(float rotationSpeed);
+
+private:
 	float cameraSpeed = 1.0f;
+	float zoomSpeed = 100.0f;
+	float rotationSpeed = 1.0f;
 
 private:
 	Frustum frustum;

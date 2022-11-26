@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include "ModuleCamera.h"
+#include "ModuleWindow.h"
 #include "Game/MathGeoLib/Math/float3x3.h"
 #include "Game/MathGeoLib/Math/Quat.h"
 #include "GL\glew.h"
@@ -28,9 +29,10 @@ bool ModuleCamera::Init()
 	frustum.SetPerspective(2.f * atanf(tanf(VFOV * 0.5f) * aspect), VFOV);
 	
 	*/
+	float aspectRatio = float(SCREEN_WIDTH) / float(SCREEN_HEIGHT);
 	frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
 	frustum.SetViewPlaneDistances(0.1f, 200.0f);
-	frustum.SetHorizontalFovAndAspectRatio(DegToRad(90.0f), 1.3f);
+	frustum.SetHorizontalFovAndAspectRatio(DegToRad(90.0f), aspectRatio);
 	frustum.SetPos(float3(0.0f, 1.0f, 12.0f));
 	frustum.SetFront(-float3::unitZ);
 	frustum.SetUp(float3::unitY);
@@ -51,22 +53,30 @@ update_status ModuleCamera::Update()
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT)) cameraSpeed = 3.0f;
 
 	vec direction(vec::zero);
-	if (App->input->GetKey(SDL_SCANCODE_W)) direction.z = -0.001f;
-	if (App->input->GetKey(SDL_SCANCODE_S)) direction.z = 0.001f;
-	if (App->input->GetKey(SDL_SCANCODE_A)) direction.x = -0.001f;
-	if (App->input->GetKey(SDL_SCANCODE_D)) direction.x = 0.001f;
-	if (App->input->GetKey(SDL_SCANCODE_E)) direction.y = -0.001f;
-	if (App->input->GetKey(SDL_SCANCODE_Q)) direction.y = 0.001f;
+	if (App->input->GetKey(SDL_SCANCODE_W)) direction.z = -0.01f;
+	if (App->input->GetKey(SDL_SCANCODE_S)) direction.z = 0.01f;
+	if (App->input->GetKey(SDL_SCANCODE_A)) direction.x = -0.01f;
+	if (App->input->GetKey(SDL_SCANCODE_D)) direction.x = 0.01f;
+	if (App->input->GetKey(SDL_SCANCODE_E)) direction.y = -0.01f;
+	if (App->input->GetKey(SDL_SCANCODE_Q)) direction.y = 0.01f;
 
 	Translate(direction * cameraSpeed);
+
+	//----- ZOOM -----
+
+	vec zoom(vec::zero);
+	if (App->input->GetWheel() > 0) zoom.z = -0.01f;
+	if (App->input->GetWheel() < 0) zoom.z = 0.01f;
+
+	Translate(zoom * zoomSpeed);
 
 	//----- ROTATION -----
 
 	vec rotation(vec::zero);
-	if (App->input->GetKey(SDL_SCANCODE_UP)) rotation.x = 0.001f;
-	if (App->input->GetKey(SDL_SCANCODE_DOWN)) rotation.x = -0.001f;
-	if (App->input->GetKey(SDL_SCANCODE_RIGHT)) rotation.y = -0.001f;
-	if (App->input->GetKey(SDL_SCANCODE_LEFT)) rotation.y = 0.001f;
+	if (App->input->GetKey(SDL_SCANCODE_UP)) rotation.x = 0.01f;
+	if (App->input->GetKey(SDL_SCANCODE_DOWN)) rotation.x = -0.01f;
+	if (App->input->GetKey(SDL_SCANCODE_RIGHT)) rotation.y = -0.01f;
+	if (App->input->GetKey(SDL_SCANCODE_LEFT)) rotation.y = 0.01f;
 	
 	Rotate(rotation);
 
@@ -93,6 +103,34 @@ float4x4 ModuleCamera::GetProjectionMatrix()
 	return float4x4(frustum.ProjectionMatrix());
 }
 
+float ModuleCamera::GetDistanceNearClippingPlane() {
+	return frustum.NearPlaneDistance();
+}
+
+float ModuleCamera::GetDistanceFarClippingPlane() {
+	return frustum.FarPlaneDistance();
+}
+
+float ModuleCamera::GetHorizontalFOV()
+{
+	return RadToDeg(frustum.HorizontalFov());
+}
+
+float ModuleCamera::GetAspectRatio()
+{
+	return frustum.AspectRatio();
+}
+
+float3 ModuleCamera::GetPos()
+{
+	return frustum.Pos();
+}
+
+float ModuleCamera::GetRotationSpeed()
+{
+	return rotationSpeed;
+}
+
 void ModuleCamera::Translate(const vec& direction) 
 {
 	frustum.SetPos(frustum.Pos() + frustum.WorldMatrix().Float3x3Part().MulDir(direction));
@@ -103,14 +141,48 @@ void ModuleCamera::Translate(const vec& direction)
 	*/
 }
 
-
 void ModuleCamera::Rotate(const vec& rotation) {
-	Quat qyRotation = Quat::RotateY(rotation.y);
-	Quat qxRotation = Quat::RotateAxisAngle(frustum.WorldRight(), rotation.x);
+	
+	Quat qyRotation = Quat::RotateY(rotation.y * rotationSpeed);
+	Quat qxRotation = Quat::RotateAxisAngle(frustum.WorldRight(), rotation.x * rotationSpeed);
 	Quat qRotation = qxRotation.Mul(qyRotation);
 
 	vec oldFront = frustum.Front().Normalized();
 	frustum.SetFront(qRotation *oldFront);
 	vec oldUp = frustum.Up().Normalized();
 	frustum.SetUp(qRotation * oldUp);
+}
+
+void ModuleCamera::SetHorizontalFOV(float hFOV)
+{
+	float hFOVRadians = DegToRad(hFOV);
+
+	int w;
+	int h;
+
+	SDL_GetWindowSize(App->window->window, &w, &h);
+
+	float aspect = float(w) / float(h);
+	frustum.SetHorizontalFovAndAspectRatio(hFOVRadians, aspect);
+}
+
+void ModuleCamera::SetAspectRatio(float aspectRatio)
+{
+	float hFOV = frustum.HorizontalFov();
+	frustum.SetHorizontalFovAndAspectRatio(hFOV, aspectRatio);
+}
+
+void ModuleCamera::SetPlaneDistances(float distanceNear, float distanceFar)
+{
+	frustum.SetViewPlaneDistances(distanceNear, distanceFar);
+}
+
+void ModuleCamera::SetPosition(const float3& position)
+{
+	frustum.SetPos(position);
+}
+
+void ModuleCamera::SetRotationSpeed(float rotationSpeed)
+{
+	this->rotationSpeed = rotationSpeed;
 }

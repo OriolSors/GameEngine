@@ -99,7 +99,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\SDL\include;glew-2.1.0\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\SDL\include;glew-2.1.0\include;.\Game\ImGui</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>
       </DisableSpecificWarnings>
     </ClCompile>
@@ -147,6 +147,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Game\ImGui\imgui.cpp" />
+    <ClCompile Include="Game\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="Game\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="Game\ImGui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Game\ImGui\imgui_impl_sdl.cpp" />
+    <ClCompile Include="Game\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="Game\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Game\MathGeoLib\Algorithm\GJK.cpp" />
     <ClCompile Include="Game\MathGeoLib\Algorithm\GJK2D.cpp" />
     <ClCompile Include="Game\MathGeoLib\Algorithm\Random\LCG.cpp" />
@@ -193,6 +200,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ModuleCamera.cpp" />
     <ClCompile Include="ModuleDebugDraw.cpp" />
+    <ClCompile Include="ModuleEditor.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="ModuleProgram.cpp" />
     <ClCompile Include="ModuleRender.cpp" />
@@ -204,6 +212,15 @@
     <ClInclude Include="debugdraw.h" />
     <ClInclude Include="debug_draw.hpp" />
     <ClInclude Include="Dummy.h" />
+    <ClInclude Include="Game\ImGui\imconfig.h" />
+    <ClInclude Include="Game\ImGui\imgui.h" />
+    <ClInclude Include="Game\ImGui\imgui_impl_opengl3.h" />
+    <ClInclude Include="Game\ImGui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="Game\ImGui\imgui_impl_sdl.h" />
+    <ClInclude Include="Game\ImGui\imgui_internal.h" />
+    <ClInclude Include="Game\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="Game\ImGui\imstb_textedit.h" />
+    <ClInclude Include="Game\ImGui\imstb_truetype.h" />
     <ClInclude Include="Game\MathGeoLib\Algorithm\GJK.h" />
     <ClInclude Include="Game\MathGeoLib\Algorithm\GJK2D.h" />
     <ClInclude Include="Game\MathGeoLib\Algorithm\Random\LCG.h" />
@@ -283,6 +300,7 @@
     <ClInclude Include="Module.h" />
     <ClInclude Include="ModuleCamera.h" />
     <ClInclude Include="ModuleDebugDraw.h" />
+    <ClInclude Include="ModuleEditor.h" />
     <ClInclude Include="ModuleInput.h" />
     <ClInclude Include="ModuleProgram.h" />
     <ClInclude Include="ModuleRender.h" />

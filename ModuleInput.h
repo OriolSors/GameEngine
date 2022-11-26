@@ -17,7 +17,9 @@ public:
 	bool CleanUp();
 
 	Uint8 GetKey(int key);
+	int GetWheel();
 
 private:
 	const Uint8 *keyboard = NULL;
+	int mouse = NULL;
 };
