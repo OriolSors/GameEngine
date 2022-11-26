@@ -29,9 +29,10 @@ bool ModuleCamera::Init()
 	frustum.SetPerspective(2.f * atanf(tanf(VFOV * 0.5f) * aspect), VFOV);
 	
 	*/
+	float aspectRatio = float(SCREEN_WIDTH) / float(SCREEN_HEIGHT);
 	frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
 	frustum.SetViewPlaneDistances(0.1f, 200.0f);
-	frustum.SetHorizontalFovAndAspectRatio(DegToRad(90.0f), 1.3f);
+	frustum.SetHorizontalFovAndAspectRatio(DegToRad(90.0f), aspectRatio);
 	frustum.SetPos(float3(0.0f, 1.0f, 12.0f));
 	frustum.SetFront(-float3::unitZ);
 	frustum.SetUp(float3::unitY);
@@ -67,7 +68,6 @@ update_status ModuleCamera::Update()
 	if (App->input->GetWheel() > 0) zoom.z = -0.01f;
 	if (App->input->GetWheel() < 0) zoom.z = 0.01f;
 
-	ENGINE_LOG("%d",App->input->GetWheel());
 	Translate(zoom * zoomSpeed);
 
 	//----- ROTATION -----
@@ -169,8 +169,7 @@ void ModuleCamera::SetHorizontalFOV(float hFOV)
 void ModuleCamera::SetAspectRatio(float aspectRatio)
 {
 	float hFOV = frustum.HorizontalFov();
-	float vFOV = 2.f * atanf(aspectRatio * tanf(hFOV * 0.5f));
-	frustum.SetPerspective(hFOV, vFOV);
+	frustum.SetHorizontalFovAndAspectRatio(hFOV, aspectRatio);
 }
 
 void ModuleCamera::SetPlaneDistances(float distanceNear, float distanceFar)
