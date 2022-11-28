@@ -1,7 +1,8 @@
-#version 330
+#version 440
 out vec4 color;
-
+in vec2 uv0;
+layout(binding=5) uniform sampler2D mytexture;
 void main()
 {
-	color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	color = texture2D(mytexture, uv0);
 }

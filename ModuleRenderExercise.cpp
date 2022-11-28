@@ -3,6 +3,7 @@
 #include "ModuleRender.h"
 #include "ModuleProgram.h"
 #include "ModuleWindow.h"
+#include "ModuleTexture.h"
 #include "ModuleRenderExercise.h"
 #include "ModuleDebugDraw.h"
 #include "ModuleCamera.h"
@@ -51,41 +52,33 @@ bool ModuleRenderExercise::CleanUp()
 }
 
 void ModuleRenderExercise::CreateTriangleVBO() {
-    float vtx_data[] = { -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f };
+    float vtx_data[] = 
+    { 
+        0.5f,  0.5f, 0.0f,   1.0f, 1.0f,   // top right
+        0.5f, -0.5f, 0.0f,   1.0f, 0.0f,   // bottom right
+        -0.5f, -0.5f, 0.0f,  0.0f, 0.0f,   // bottom left
+        -0.5f,  0.5f, 0.0f,  0.0f, 1.0f    // top left 
+    };
+
+    int triangles[] =
+    {
+        0, 2, 1, 
+        0, 3, 2  
+    };
+
+
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo); // set vbo active
     glBufferData(GL_ARRAY_BUFFER, sizeof(vtx_data), vtx_data, GL_STATIC_DRAW);
 
-    /*
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    */
+    glGenBuffers(1, &ebo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo); // set ebo active
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(triangles), triangles, GL_STATIC_DRAW);
 
 }
 
 void ModuleRenderExercise::RenderTriangle()
 {
-    /*
-    float aspect = float(SCREEN_WIDTH) / float(SCREEN_HEIGHT);
-    Frustum frustum;
-    frustum.SetKind(FrustumProjectiveSpace::FrustumSpaceGL, FrustumHandedness::FrustumRightHanded);
-    frustum.SetPos(float3(0.0f, 2.0f, 10.0f));
-    frustum.SetFront(-float3::unitZ);
-    frustum.SetUp(float3::unitY);
-    frustum.SetViewPlaneDistances(0.1f, 100.0f);
-    frustum.SetPerspective(2.f * atanf(tanf(VFOV * 0.5f) * aspect), VFOV);
-
-    
-
-    float4x4 proj = frustum.ProjectionMatrix();
-
-    float4x4 model = float4x4::FromTRS(float3(2.0f, 0.0f, 0.0f),
-        float4x4::RotateZ(pi / 4.0f),
-        float3(2.0f, 1.0f, 0.0f));
-    float4x4 view = frustum.ViewMatrix();
-
-    */
 
     float4x4 proj = App->camera->GetProjectionMatrix();
     float4x4 view = App->camera->GetViewMatrix();
@@ -104,10 +97,19 @@ void ModuleRenderExercise::RenderTriangle()
     glUniformMatrix4fv(2, 1, GL_TRUE, &model[0][0]);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)0);
+
     
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)(sizeof(float) * 3));
+    
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, App->texture->texture_object);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     int w;
     int h;

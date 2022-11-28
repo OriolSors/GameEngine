@@ -18,5 +18,6 @@ public:
 private:
     unsigned program;
     unsigned int vbo;
+    unsigned int ebo;
 };
 
