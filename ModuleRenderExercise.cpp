@@ -54,26 +54,42 @@ bool ModuleRenderExercise::CleanUp()
 void ModuleRenderExercise::CreateTriangleVBO() {
     float vtx_data[] = 
     { 
-        0.5f,  0.5f, 0.0f,   1.0f, 1.0f,   // top right
-        0.5f, -0.5f, 0.0f,   1.0f, 0.0f,   // bottom right
-        -0.5f, -0.5f, 0.0f,  0.0f, 0.0f,   // bottom left
-        -0.5f,  0.5f, 0.0f,  0.0f, 1.0f    // top left 
+        0.0f,  0.0f, 0.0f,      
+        1.0f,  0.0f, 0.0f,  
+        1.0f,  1.0f, 0.0f,
+
+        1.0f,  1.0f, 0.0f,
+        0.0f,  1.0f, 0.0f,
+        0.0f,  0.0f, 0.0f,
+
+        0.0f, 0.0f,
+        1.0f, 0.0f,
+        1.0f, 1.0f,
+
+        1.0f, 1.0f,
+        0.0f, 1.0f,
+        0.0f, 0.0f
+        
     };
 
+    /*
     int triangles[] =
     {
         0, 2, 1, 
         0, 3, 2  
     };
-
+    */
 
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo); // set vbo active
     glBufferData(GL_ARRAY_BUFFER, sizeof(vtx_data), vtx_data, GL_STATIC_DRAW);
 
+    /*
     glGenBuffers(1, &ebo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo); // set ebo active
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(triangles), triangles, GL_STATIC_DRAW);
+
+    */
 
 }
 
@@ -88,7 +104,7 @@ void ModuleRenderExercise::RenderTriangle()
         float3(2.0f, 1.0f, 0.0f));
 
     glClearColor(0.15f, 0.15f, 0.15f, 1);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     glUseProgram(program);
     
@@ -99,17 +115,16 @@ void ModuleRenderExercise::RenderTriangle()
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)0);
-
-    
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)0);
 
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)(sizeof(float) * 3));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (void*)(sizeof(float) * 3*6));
     
-    glActiveTexture(GL_TEXTURE0);
+    glActiveTexture(GL_TEXTURE5);
     glBindTexture(GL_TEXTURE_2D, App->texture->texture_object);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    //glDrawElements(GL_TRIANGLES, 2, GL_UNSIGNED_INT, 0);
 
     int w;
     int h;

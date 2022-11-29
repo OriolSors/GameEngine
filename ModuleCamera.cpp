@@ -157,12 +157,7 @@ void ModuleCamera::SetHorizontalFOV(float hFOV)
 {
 	float hFOVRadians = DegToRad(hFOV);
 
-	int w;
-	int h;
-
-	SDL_GetWindowSize(App->window->window, &w, &h);
-
-	float aspect = float(w) / float(h);
+	float aspect = frustum.AspectRatio();
 	frustum.SetHorizontalFovAndAspectRatio(hFOVRadians, aspect);
 }
 

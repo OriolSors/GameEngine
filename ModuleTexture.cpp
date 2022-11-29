@@ -1,6 +1,6 @@
 #include "ModuleTexture.h"
 #include "GL\glew.h"
-#include "Game/DirectXTex-main/DirectXTex/DirectXTex.h"
+#include "Game/DirectXTex/DirectXTex.h"
 
 ModuleTexture::ModuleTexture()
 {
@@ -26,12 +26,10 @@ bool ModuleTexture::Init()
 
     
 
-    DirectX::ScratchImage destImg;
-    res = FlipRotate(img->GetImages(), img->GetImageCount(), img->GetMetadata(), DirectX::TEX_FR_FLIP_VERTICAL, destImg);
+    DirectX::ScratchImage* destImg = new DirectX::ScratchImage();
+    res = FlipRotate(img->GetImages(), img->GetImageCount(), img->GetMetadata(), DirectX::TEX_FR_FLIP_VERTICAL, *destImg);
 
-    
     glGenTextures(1, &texture_object);
-    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture_object);
     
 
@@ -41,7 +39,7 @@ bool ModuleTexture::Init()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, destImg.GetMetadata().width, destImg.GetMetadata().height, 0, GL_RGBA, GL_UNSIGNED_BYTE, destImg.GetPixels());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, destImg->GetMetadata().width, destImg->GetMetadata().height, 0, GL_RGBA, GL_UNSIGNED_BYTE, destImg->GetPixels());
     glGenerateMipmap(GL_TEXTURE_2D);
 
     
