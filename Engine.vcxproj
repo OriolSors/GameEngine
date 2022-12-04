@@ -99,15 +99,15 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\SDL\include;glew-2.1.0\include;.\Game\ImGui;.\Game\DirectXTex</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\SDL\include;glew-2.1.0\include;.\Game\ImGui;.\Game\DirectXTex;.\Game\AssimpLib</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>
       </DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>Game\DirectXTex\Bin\Desktop_2019_Win10\x64\Release;glew-2.1.0\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>Game\AssimpLib;Game\DirectXTex\Bin\Desktop_2019_Win10\x64\Release;glew-2.1.0\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;DirectXTex.lib;assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -134,7 +134,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\SDL\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\SDL\include;glew-2.1.0\include;.\Game\ImGui;.\Game\DirectXTex;.\Game\AssimpLib</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>
       </DisableSpecificWarnings>
     </ClCompile>
@@ -143,6 +143,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>Game\AssimpLib;Game\DirectXTex\Bin\Desktop_2019_Win10\x64\Release;glew-2.1.0\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;DirectXTex.lib;assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -219,6 +221,8 @@
     <ClCompile Include="Game\MathGeoLib\Time\Clock.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModuleCamera.cpp" />
     <ClCompile Include="ModuleDebugDraw.cpp" />
     <ClCompile Include="ModuleEditor.cpp" />
@@ -234,6 +238,88 @@
     <ClInclude Include="debugdraw.h" />
     <ClInclude Include="debug_draw.hpp" />
     <ClInclude Include="Dummy.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\aabb.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\ai_assert.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\anim.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\Base64.hpp" />
+    <ClInclude Include="Game\AssimpLib\assimp\BaseImporter.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\Bitmap.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\BlobIOSystem.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\ByteSwapper.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\camera.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\cexport.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\cfileio.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\cimport.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\ColladaMetaData.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\color4.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\commonMetaData.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\Compiler\poppack1.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\Compiler\pstdint.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\Compiler\pushpack1.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\config.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\CreateAnimMesh.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\DefaultIOStream.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\DefaultIOSystem.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\DefaultLogger.hpp" />
+    <ClInclude Include="Game\AssimpLib\assimp\defs.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\Exceptional.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\Exporter.hpp" />
+    <ClInclude Include="Game\AssimpLib\assimp\fast_atof.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\GenericProperty.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\GltfMaterial.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\Hash.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\Importer.hpp" />
+    <ClInclude Include="Game\AssimpLib\assimp\importerdesc.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\IOStream.hpp" />
+    <ClInclude Include="Game\AssimpLib\assimp\IOStreamBuffer.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\IOSystem.hpp" />
+    <ClInclude Include="Game\AssimpLib\assimp\light.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\LineSplitter.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\LogAux.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\Logger.hpp" />
+    <ClInclude Include="Game\AssimpLib\assimp\LogStream.hpp" />
+    <ClInclude Include="Game\AssimpLib\assimp\material.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\MathFunctions.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\matrix3x3.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\matrix4x4.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\MemoryIOWrapper.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\mesh.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\metadata.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\NullLogger.hpp" />
+    <ClInclude Include="Game\AssimpLib\assimp\ObjMaterial.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\ParsingUtils.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\pbrmaterial.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\port\AndroidJNI\AndroidJNIIOSystem.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\port\AndroidJNI\BundledAssetIOSystem.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\postprocess.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\Profiler.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\ProgressHandler.hpp" />
+    <ClInclude Include="Game\AssimpLib\assimp\qnan.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\quaternion.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\RemoveComments.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\scene.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\SceneCombiner.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\SGSpatialSort.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\SkeletonMeshBuilder.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\SmallVector.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\SmoothingGroups.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\SpatialSort.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\StandardShapes.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\StreamReader.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\StreamWriter.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\StringComparison.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\StringUtils.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\Subdivision.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\texture.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\TinyFormatter.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\types.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\vector2.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\vector3.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\version.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\Vertex.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\XmlParser.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\XMLTools.h" />
+    <ClInclude Include="Game\AssimpLib\assimp\ZipArchiveIOSystem.h" />
     <ClInclude Include="Game\DirectXTex\BC.h" />
     <ClInclude Include="Game\DirectXTex\BCDirectCompute.h" />
     <ClInclude Include="Game\DirectXTex\d3dx12.h" />
@@ -327,6 +413,8 @@
     <ClInclude Include="Game\MathGeoLib\Math\vec2d.h" />
     <ClInclude Include="Game\MathGeoLib\Time\Clock.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="Module.h" />
     <ClInclude Include="ModuleCamera.h" />
     <ClInclude Include="ModuleDebugDraw.h" />
@@ -339,6 +427,14 @@
     <ClInclude Include="ModuleWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Game\AssimpLib\assimp\color4.inl" />
+    <None Include="Game\AssimpLib\assimp\material.inl" />
+    <None Include="Game\AssimpLib\assimp\matrix3x3.inl" />
+    <None Include="Game\AssimpLib\assimp\matrix4x4.inl" />
+    <None Include="Game\AssimpLib\assimp\quaternion.inl" />
+    <None Include="Game\AssimpLib\assimp\SmoothingGroups.inl" />
+    <None Include="Game\AssimpLib\assimp\vector2.inl" />
+    <None Include="Game\AssimpLib\assimp\vector3.inl" />
     <None Include="Game\DirectXTex-main\DirectXTex\Shaders\Compiled\BC6HEncode_EncodeBlockCS.inc" />
     <None Include="Game\DirectXTex-main\DirectXTex\Shaders\Compiled\BC6HEncode_TryModeG10CS.inc" />
     <None Include="Game\DirectXTex-main\DirectXTex\Shaders\Compiled\BC6HEncode_TryModeLE10CS.inc" />
