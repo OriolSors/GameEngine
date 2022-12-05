@@ -7,24 +7,32 @@
 #include <assimp/postprocess.h>
 #include "Globals.h"
 
+Model::Model()
+{
+}
+
+Model::~Model()
+{
+}
+
 void Model::Load(const char* file_name)
 {
-	aiString file;
+	
 	const aiScene* scene = aiImportFile(file_name, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene)
 	{
-		LoadMaterials(scene, file);
-		LoadMeshes(scene, file);
+		LoadMaterials(scene);
+		LoadMeshes(scene);
 	}
 	else
 	{
-		ENGINE_LOG("Error loading %s: %s", file, aiGetErrorString());
+		ENGINE_LOG("Error loading %s: %s", file_name, aiGetErrorString());
 	}
 }
 
-void Model::LoadMaterials(const aiScene* scene, aiString& file)
+void Model::LoadMaterials(const aiScene* scene)
 {
-	
+	aiString file;
 	materials.reserve(scene->mNumMaterials);
 	for (unsigned i = 0; i < scene->mNumMaterials; ++i)
 	{
@@ -37,7 +45,7 @@ void Model::LoadMaterials(const aiScene* scene, aiString& file)
 	
 }
 
-void Model::LoadMeshes(const aiScene* scene, aiString& file)
+void Model::LoadMeshes(const aiScene* scene)
 {
 	
 }

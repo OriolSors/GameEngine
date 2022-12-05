@@ -1,6 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Game/DirectXTex/DirectXTex.h"
+#include "GL\glew.h"
 class ModuleTexture :
     public Module
 {
@@ -18,7 +19,7 @@ public:
 	void Load(const char* textureFile);
 
 public:
-	unsigned int texture_object;
+	GLuint texture_object;
 
 	unsigned internalFormat;
 	unsigned format;

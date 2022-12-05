@@ -51,6 +51,10 @@ bool ModuleRenderExercise::CleanUp()
     return true;
 }
 
+unsigned ModuleRenderExercise::GetProgram() {
+    return program;
+}
+
 void ModuleRenderExercise::CreateTriangleVBO() {
     float vtx_data[] = 
     { 

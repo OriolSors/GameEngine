@@ -15,6 +15,7 @@ public:
     void RenderTriangle();
     void DestroyVBO();
 
+    unsigned GetProgram();
 private:
     unsigned program;
     unsigned int vbo;
