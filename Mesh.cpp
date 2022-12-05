@@ -13,6 +13,7 @@ Mesh::~Mesh()
 {
 }
 
+
 void Mesh::LoadVBO(const aiMesh* mesh)
 {
 	glGenBuffers(1, &vbo);
@@ -63,7 +64,7 @@ void Mesh::CreateVAO()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * 3 * num_vertices));
 }
 
-void Mesh::Draw(const std::vector<unsigned>& model_textures)
+void Mesh::Draw(const std::vector<GLuint>& model_textures)
 {
 	unsigned program = App->exercise->GetProgram();
 	const float4x4& view = App->camera->GetViewMatrix();
@@ -78,5 +79,20 @@ void Mesh::Draw(const std::vector<unsigned>& model_textures)
 	glUniform1i(glGetUniformLocation(program, "diffuse"), 0);
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, nullptr);
+	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, nullptr); 
+}
+
+void Mesh::SetMaterialIndex(GLuint material_index)
+{
+	this->material_index = material_index;
+}
+
+void Mesh::SetNumVertices(unsigned num_vertices)
+{
+	this->num_vertices = num_vertices;
+}
+
+void Mesh::SetNumIndices(unsigned num_indices)
+{
+	this->num_indices = num_indices;
 }

@@ -1,4 +1,3 @@
-#define NOMINMAX
 #include "Model.h"
 #include "Application.h"
 #include "ModuleTexture.h"
@@ -6,6 +5,7 @@
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
 #include "Globals.h"
+#include <vector>
 
 Model::Model()
 {
@@ -13,6 +13,7 @@ Model::Model()
 
 Model::~Model()
 {
+	meshes.clear();
 }
 
 void Model::Load(const char* file_name)
@@ -47,5 +48,25 @@ void Model::LoadMaterials(const aiScene* scene)
 
 void Model::LoadMeshes(const aiScene* scene)
 {
-	
+	meshes.reserve(scene->mNumMeshes);
+	for (unsigned i = 0; i < scene->mNumMeshes; ++i)
+	{
+		aiMesh* mMesh = scene->mMeshes[i];
+
+		Mesh* mesh = new Mesh();
+		mesh->SetMaterialIndex(mMesh->mMaterialIndex);
+
+		mesh->LoadVBO(mMesh);
+		mesh->LoadEBO(mMesh);
+		mesh->CreateVAO();
+		meshes.push_back(mesh);
+	}
+}
+
+void Model::Draw() {
+
+	std::vector<Mesh*>::iterator iter, end;
+	for (iter = meshes.begin(), end = meshes.end(); iter != end; ++iter) {
+		(*iter)->Draw(materials);
+	}
 }

@@ -12,9 +12,10 @@ public:
 	void Load(const char* file_name);
 	void LoadMaterials(const aiScene* scene);
 	void LoadMeshes(const aiScene* scene);
+	void Draw();
 
 private:
-	std::vector<Mesh*> mesh;
+	std::vector<Mesh*> meshes;
 	std::vector<GLuint> materials;
 };
 

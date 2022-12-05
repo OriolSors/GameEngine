@@ -19,16 +19,6 @@ ModuleCamera::~ModuleCamera()
 
 bool ModuleCamera::Init()
 {
-	/*
-	float aspect = float(SCREEN_WIDTH) / float(SCREEN_HEIGHT);
-	frustum.SetKind(FrustumProjectiveSpace::FrustumSpaceGL, FrustumHandedness::FrustumRightHanded);
-	frustum.SetPos(float3(0.0f, 2.0f, 10.0f));
-	frustum.SetFront(-float3::unitZ);
-	frustum.SetUp(float3::unitY);
-	frustum.SetViewPlaneDistances(0.1f, 100.0f);
-	frustum.SetPerspective(2.f * atanf(tanf(VFOV * 0.5f) * aspect), VFOV);
-	
-	*/
 	float aspectRatio = float(SCREEN_WIDTH) / float(SCREEN_HEIGHT);
 	frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
 	frustum.SetViewPlaneDistances(0.1f, 200.0f);

@@ -1,4 +1,4 @@
-#include "Globals.h"
+﻿#include "Globals.h"
 #include "Application.h"
 #include "ModuleRender.h"
 #include "ModuleProgram.h"
@@ -23,22 +23,39 @@ ModuleRenderExercise::~ModuleRenderExercise()
 
 bool ModuleRenderExercise::Init()
 {  
-    char* v_shader_file = App->program->Load("HelloWorld_vs.glsl");
-    char* f_shader_file = App->program->Load("HelloWorld_fs.glsl");
+    const char* v_shader_file = App->program->Load("HelloWorld_vs.glsl");
+    const char* f_shader_file = App->program->Load("HelloWorld_fs.glsl");
 
     unsigned v_shader = App->program->CompileShader(GL_VERTEX_SHADER, v_shader_file);
     unsigned f_shader = App->program->CompileShader(GL_FRAGMENT_SHADER, f_shader_file);
 
     program = App->program->CreateProgram(v_shader, f_shader);
 
-    CreateTriangleVBO();
+    //CreateTriangleVBO();
+    
+    model->Load("BakerHouse.fbx");
 
     return true;
 }
 
 update_status ModuleRenderExercise::Update()
 {
-    RenderTriangle();
+    //RenderTriangle();
+
+    float4x4 proj = App->camera->GetProjectionMatrix();
+    float4x4 view = App->camera->GetViewMatrix();
+
+    glClearColor(0.15f, 0.15f, 0.15f, 1);
+
+    int w;
+    int h;
+
+    SDL_GetWindowSize(App->window->window, &w, &h);
+
+    model->Draw();
+
+    App->debugDraw->Draw(view, proj, w, h);
+
     return UPDATE_CONTINUE;
 }
 
@@ -56,36 +73,20 @@ unsigned ModuleRenderExercise::GetProgram() {
 }
 
 void ModuleRenderExercise::CreateTriangleVBO() {
-    float vtx_data[] = 
-    { 
-        0.0f,  0.0f, 0.0f,      
-        1.0f,  0.0f, 0.0f,  
-        1.0f,  1.0f, 0.0f,
+    float vtx_data[] = {
+        -1.0f, -1.0f, 0.0f, // ← v0 pos
+        0.0f, 0.0f,         // ← v0 texcoord
 
-        1.0f,  1.0f, 0.0f,
-        0.0f,  1.0f, 0.0f,
-        0.0f,  0.0f, 0.0f,
+        1.0f, -1.0f, 0.0f,  // ← v1 pos
+        1.0f, 0.0f,         // ← v1 texcoord
 
-        0.0f, 0.0f,
-        1.0f, 0.0f,
-        1.0f, 1.0f,
-
-        1.0f, 1.0f,
-        0.0f, 1.0f,
-        0.0f, 0.0f
-        
+        0.0f, 1.0f, 0.0f,   // ← v2 pos
+        0.5f, 1.0f          // ← v2 texcoord
     };
 
-    /*
-    int triangles[] =
-    {
-        0, 2, 1, 
-        0, 3, 2  
-    };
-    */
 
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo); // set vbo active
+    //glGenBuffers(1, &vbo);
+    //glBindBuffer(GL_ARRAY_BUFFER, vbo); // set vbo active
     glBufferData(GL_ARRAY_BUFFER, sizeof(vtx_data), vtx_data, GL_STATIC_DRAW);
 
     /*
@@ -116,7 +117,7 @@ void ModuleRenderExercise::RenderTriangle()
     glUniformMatrix4fv(1, 1, GL_TRUE, &view[0][0]);
     glUniformMatrix4fv(2, 1, GL_TRUE, &model[0][0]);
 
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    //glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)0);
@@ -142,6 +143,6 @@ void ModuleRenderExercise::RenderTriangle()
 
 void ModuleRenderExercise::DestroyVBO()
 {
-	glDeleteBuffers(1, &vbo);
+	//glDeleteBuffers(1, &vbo);
     glDeleteProgram(program);
 }

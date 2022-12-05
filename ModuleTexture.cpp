@@ -42,16 +42,15 @@ void ModuleTexture::Load(const char* textureFile)
 {
     auto img = new DirectX::ScratchImage();
 
-    size_t size = strlen(textureFile) + 1;
-    std::wstring wc(size, L'#');
-    mbstowcs(&wc[0], textureFile, size);
+    wchar_t* vOut = new wchar_t[strlen(textureFile) + 1];
+    mbstowcs_s(NULL, vOut, strlen(textureFile) + 1, textureFile, strlen(textureFile));
 
-    HRESULT res = DirectX::LoadFromDDSFile(&wc[0], DirectX::DDS_FLAGS_NONE, &md, *img);
+    HRESULT res = DirectX::LoadFromDDSFile(vOut, DirectX::DDS_FLAGS_NONE, &md, *img);
 
 
-    if (FAILED(res))res = DirectX::LoadFromTGAFile(&wc[0], DirectX::TGA_FLAGS_NONE, &md, *img);
+    if (FAILED(res))res = DirectX::LoadFromTGAFile(vOut, DirectX::TGA_FLAGS_NONE, &md, *img);
 
-    if (FAILED(res))res = DirectX::LoadFromWICFile(&wc[0], DirectX::WIC_FLAGS_NONE, &md, *img);
+    if (FAILED(res))res = DirectX::LoadFromWICFile(vOut, DirectX::WIC_FLAGS_NONE, &md, *img);
 
     DirectX::ScratchImage* destImg = new DirectX::ScratchImage();
     res = FlipRotate(img->GetImages(), img->GetImageCount(), md, DirectX::TEX_FR_FLIP_VERTICAL, *destImg);
@@ -67,7 +66,7 @@ void ModuleTexture::Load(const char* textureFile)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
 
 
-    switch (md.format)
+    switch (destImg->GetMetadata().format)
     {
         case DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
         case DXGI_FORMAT_R8G8B8A8_UNORM:

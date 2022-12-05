@@ -1,5 +1,6 @@
 #pragma once
 #include "Module.h"
+#include "Model.h"
 class ModuleRenderExercise :
     public Module
 {
@@ -18,7 +19,6 @@ public:
     unsigned GetProgram();
 private:
     unsigned program;
-    unsigned int vbo;
-    unsigned int ebo;
+    Model* model = new Model();
 };
 
