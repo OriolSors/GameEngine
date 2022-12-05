@@ -32,6 +32,7 @@ bool ModuleRenderExercise::Init()
     program = App->program->CreateProgram(v_shader, f_shader);
 
     //CreateTriangleVBO();
+    modelMatrix = float4x4::FromTRS(float3::zero, float4x4::identity, float3(0.25f, 0.25f, 0.25f));
     
     model->Load("BakerHouse.fbx");
 
@@ -70,6 +71,11 @@ bool ModuleRenderExercise::CleanUp()
 
 unsigned ModuleRenderExercise::GetProgram() {
     return program;
+}
+
+float4x4 ModuleRenderExercise::GetModelMatrix() {
+    
+    return modelMatrix;
 }
 
 void ModuleRenderExercise::CreateTriangleVBO() {
