@@ -1,5 +1,7 @@
 #pragma once
 #include "Module.h"
+#include "Model.h"
+#include "Game/MathGeoLib/Math/float4x4.h"
 class ModuleRenderExercise :
     public Module
 {
@@ -15,8 +17,15 @@ public:
     void RenderTriangle();
     void DestroyVBO();
 
+    unsigned GetProgram();
+    float4x4 GetModelMatrix();
+
+    void SetModel(const char* pathModel);
+
 private:
     unsigned program;
-    unsigned int vbo;
+    Model* model = new Model();
+    float4x4 modelMatrix = float4x4::identity;
+
 };
 

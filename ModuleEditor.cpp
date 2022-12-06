@@ -73,7 +73,7 @@ update_status ModuleEditor::Update()
     if (ImGui::SliderFloat("Near Clipping Plane distance", &distanceNearClippingPlane, 0.1f, 5.0f)) {
         App->camera->SetPlaneDistances(distanceNearClippingPlane, distanceFarClippingPlane);
     }
-    if (ImGui::SliderFloat("Far Clipping Plane distance", &distanceFarClippingPlane, 10.0f, 15.0f)) {
+    if (ImGui::SliderFloat("Far Clipping Plane distance", &distanceFarClippingPlane, 10.0f, 250.0f)) {
         App->camera->SetPlaneDistances(distanceNearClippingPlane, distanceFarClippingPlane);
     }
     if (ImGui::InputFloat("X: ", &pos.x)) {
