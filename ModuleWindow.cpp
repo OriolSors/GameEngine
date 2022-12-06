@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
+#include "ModuleRender.h" 
 
 ModuleWindow::ModuleWindow()
 {
@@ -25,8 +26,14 @@ bool ModuleWindow::Init()
 	else
 	{
 		//Create window
-		int width = SCREEN_WIDTH;
-		int height = SCREEN_HEIGHT;
+		SDL_Rect* rect = new SDL_Rect;
+		SDL_GetDisplayUsableBounds(0, rect);
+		//int width = SCREEN_WIDTH;
+		//int height = SCREEN_HEIGHT;
+
+		int width = rect->w;
+		int height = rect->h;
+
 		Uint32 flags = SDL_WINDOW_SHOWN |  SDL_WINDOW_OPENGL;
 
 		if(FULLSCREEN == true)
