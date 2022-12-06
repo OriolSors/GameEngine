@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include "ModuleRender.h"
+#include "ModuleCamera.h"
 #include "ModuleRenderExercise.h"
 #include "SDL/include/SDL.h"
 #include "Game/ImGui/imgui_impl_sdl.h"
@@ -41,7 +42,9 @@ update_status ModuleInput::Update()
 
     SDL_Event sdlEvent;
 
-    mouse = 0;
+    mouseWheel = 0;
+    mouseMotion = float2::zero;
+    
     while (SDL_PollEvent(&sdlEvent) != 0)
     {
         ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
@@ -54,10 +57,23 @@ update_status ModuleInput::Update()
                     App->renderer->WindowResized(sdlEvent.window.data1, sdlEvent.window.data2);
                 break;
             case SDL_MOUSEWHEEL:
-                mouse = sdlEvent.wheel.y;
+                mouseWheel = sdlEvent.wheel.y;
+                break;
+            case SDL_MOUSEMOTION:
+                mouseMotion.x = sdlEvent.motion.x;
+                mouseMotion.y = sdlEvent.motion.y;
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                if (sdlEvent.button.button == SDL_BUTTON_RIGHT)right = true;
+                else right = false;
+                break;
+            case SDL_MOUSEBUTTONUP:
+                if (sdlEvent.button.button == SDL_BUTTON_RIGHT)right = false;
+                else right = true;
                 break;
             case SDL_DROPFILE:
                 App->exercise->SetModel(sdlEvent.drop.file);
+                break;
         }
     }
 
@@ -79,7 +95,11 @@ Uint8 ModuleInput::GetKey(int key)
 
 int ModuleInput::GetWheel()
 {
-    return mouse;
+    return mouseWheel;
+}
+
+float2 ModuleInput::GetMouseMotion() {
+    return mouseMotion;
 }
 
 

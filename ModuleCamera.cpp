@@ -43,7 +43,7 @@ update_status ModuleCamera::Update()
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT)) cameraSpeed = 3.0f;
 
 	vec direction(vec::zero);
-	if (App->input->GetKey(SDL_SCANCODE_W)) direction.z = -0.01f;
+	if (App->input->right && App->input->GetKey(SDL_SCANCODE_W)) direction.z = -0.01f;
 	if (App->input->GetKey(SDL_SCANCODE_S)) direction.z = 0.01f;
 	if (App->input->GetKey(SDL_SCANCODE_A)) direction.x = -0.01f;
 	if (App->input->GetKey(SDL_SCANCODE_D)) direction.x = 0.01f;
@@ -63,6 +63,7 @@ update_status ModuleCamera::Update()
 	//----- ROTATION -----
 
 	vec rotation(vec::zero);
+	
 	if (App->input->GetKey(SDL_SCANCODE_UP)) rotation.x = 0.01f;
 	if (App->input->GetKey(SDL_SCANCODE_DOWN)) rotation.x = -0.01f;
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT)) rotation.y = -0.01f;

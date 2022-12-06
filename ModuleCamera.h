@@ -35,12 +35,15 @@ public:
 	void SetPosition(const float3& position);
 	void SetRotationSpeed(float rotationSpeed);
 
+public:
+	bool move = false;
+
 private:
 	float cameraSpeed = 1.0f;
 	float zoomSpeed = 100.0f;
 	float rotationSpeed = 1.0f;
 
-private:
 	Frustum frustum;
+	
 };
 
