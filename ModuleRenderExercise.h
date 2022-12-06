@@ -20,9 +20,12 @@ public:
     unsigned GetProgram();
     float4x4 GetModelMatrix();
 
+    void SetModel(const char* pathModel);
+
 private:
     unsigned program;
     Model* model = new Model();
     float4x4 modelMatrix = float4x4::identity;
+
 };
 

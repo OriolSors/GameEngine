@@ -38,7 +38,7 @@ bool ModuleTexture::CleanUp()
     return true;
 }
 
-void ModuleTexture::Load(const char* textureFile) 
+bool ModuleTexture::Load(const char* textureFile) 
 {
     auto img = new DirectX::ScratchImage();
 
@@ -51,6 +51,8 @@ void ModuleTexture::Load(const char* textureFile)
     if (FAILED(res))res = DirectX::LoadFromTGAFile(vOut, DirectX::TGA_FLAGS_NONE, &md, *img);
 
     if (FAILED(res))res = DirectX::LoadFromWICFile(vOut, DirectX::WIC_FLAGS_NONE, &md, *img);
+
+    if (FAILED(res)) return false;
 
     DirectX::ScratchImage* destImg = new DirectX::ScratchImage();
     res = FlipRotate(img->GetImages(), img->GetImageCount(), md, DirectX::TEX_FR_FLIP_VERTICAL, *destImg);
@@ -91,7 +93,9 @@ void ModuleTexture::Load(const char* textureFile)
 
     glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, md.width, md.height, 0, format, type, destImg->GetPixels());
     glGenerateMipmap(GL_TEXTURE_2D);
-
+    
     delete img;
     delete destImg;
+
+    return true;
 }

@@ -32,9 +32,10 @@ bool ModuleRenderExercise::Init()
     program = App->program->CreateProgram(v_shader, f_shader);
 
     //CreateTriangleVBO();
-    modelMatrix = float4x4::FromTRS(float3::zero, float4x4::identity, float3(0.25f, 0.25f, 0.25f));
+    //modelMatrix = float4x4::FromTRS(float3::zero, float4x4::identity, float3(0.05f, 0.05f, 0.05f));
+    modelMatrix = float4x4::identity;
     
-    model->Load("BakerHouse.fbx");
+    model->Load("Assets/Textures/baker_house_model/BakerHouse.fbx");
 
     return true;
 }
@@ -76,6 +77,13 @@ unsigned ModuleRenderExercise::GetProgram() {
 float4x4 ModuleRenderExercise::GetModelMatrix() {
     
     return modelMatrix;
+}
+
+void ModuleRenderExercise::SetModel(const char* pathModel)
+{
+    model->Clear();
+    model->Load(pathModel);
+    ENGINE_LOG("Model changed");
 }
 
 void ModuleRenderExercise::CreateTriangleVBO() {

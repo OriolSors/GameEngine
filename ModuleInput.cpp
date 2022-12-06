@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include "ModuleRender.h"
+#include "ModuleRenderExercise.h"
 #include "SDL/include/SDL.h"
 #include "Game/ImGui/imgui_impl_sdl.h"
 
@@ -55,6 +56,8 @@ update_status ModuleInput::Update()
             case SDL_MOUSEWHEEL:
                 mouse = sdlEvent.wheel.y;
                 break;
+            case SDL_DROPFILE:
+                App->exercise->SetModel(sdlEvent.drop.file);
         }
     }
 

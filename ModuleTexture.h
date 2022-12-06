@@ -16,16 +16,15 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
-	void Load(const char* textureFile);
+	bool Load(const char* textureFile);
 
 public:
 	GLuint texture_object;
 
+	DirectX::TexMetadata md;
 	unsigned internalFormat;
 	unsigned format;
 	unsigned type;
-
-	DirectX::TexMetadata md;
 
 };
 

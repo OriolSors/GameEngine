@@ -13,9 +13,15 @@ public:
 	void LoadMaterials(const aiScene* scene);
 	void LoadMeshes(const aiScene* scene);
 	void Draw();
+	void Clear();
+
+	std::string GetDirectory(const std::string& fname);
+	std::string GetFilename(const std::string& fname);
 
 private:
 	std::vector<Mesh*> meshes;
 	std::vector<GLuint> materials;
+
+	const char* filePath;
 };
 
