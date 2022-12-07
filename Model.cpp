@@ -86,6 +86,20 @@ void Model::LoadMeshes(const aiScene* scene)
 		mesh->LoadVBO(mMesh);
 		mesh->LoadEBO(mMesh);
 		mesh->CreateVAO();
+
+		boundingBox.SetNegativeInfinity();
+
+		vec* vertices = new vec[mMesh->mNumVertices];
+
+		for (unsigned j = 0; j < mMesh->mNumVertices; ++j) {
+			float x = mMesh->mVertices[j].x;
+			float y = mMesh->mVertices[j].y;
+			float z = mMesh->mVertices[j].z;
+
+			vertices[j] = vec(x, y, z);
+		}
+		boundingBox.Enclose(vertices, mMesh->mNumVertices);
+		
 		meshes.push_back(mesh);
 	}
 }
@@ -118,4 +132,9 @@ std::string Model::GetFilename(const std::string& fname)
 	return (std::string::npos == pos)
 		? fname
 		: fname.substr(pos + 1, fname.size()-1);
+}
+
+float3 Model::GetCentreAABB()
+{
+	return boundingBox.CenterPoint();
 }

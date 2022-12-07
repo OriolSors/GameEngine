@@ -3,6 +3,7 @@
 #include<list>
 #include "Globals.h"
 #include "Module.h"
+#include "Timer.h"
 
 class ModuleRender;
 class ModuleWindow;
@@ -38,6 +39,8 @@ public:
 	ModuleTexture* texture = nullptr;
 private:
 
+	Timer time;
+	float dt;
 	std::list<Module*> modules;
 
 };

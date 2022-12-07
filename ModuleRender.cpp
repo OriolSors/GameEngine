@@ -50,7 +50,7 @@ bool ModuleRender::Init()
 	return true;
 }
 
-update_status ModuleRender::PreUpdate()
+update_status ModuleRender::PreUpdate(float deltaTime)
 {
 	
 	int w;
@@ -66,12 +66,12 @@ update_status ModuleRender::PreUpdate()
 }
 
 // Called every draw update
-update_status ModuleRender::Update()
+update_status ModuleRender::Update(float deltaTime)
 {
 	return UPDATE_CONTINUE;
 }
 
-update_status ModuleRender::PostUpdate()
+update_status ModuleRender::PostUpdate(float deltaTime)
 {
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;

@@ -11,9 +11,9 @@ public:
 	~ModuleTexture();
 
 	bool Init();
-	update_status PreUpdate();
-	update_status Update();
-	update_status PostUpdate();
+	update_status PreUpdate(float deltaTime);
+	update_status Update(float deltaTime);
+	update_status PostUpdate(float deltaTime);
 	bool CleanUp();
 
 	bool Load(const char* textureFile);

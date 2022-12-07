@@ -10,7 +10,7 @@ public:
     ~ModuleRenderExercise();
 
     bool Init();
-    update_status Update();
+    update_status Update(float deltaTime);
     bool CleanUp();
 
     void CreateTriangleVBO();
@@ -19,6 +19,7 @@ public:
 
     unsigned GetProgram();
     float4x4 GetModelMatrix();
+    float3 GetLookAtPoint();
 
     void SetModel(const char* pathModel);
 
@@ -26,6 +27,6 @@ private:
     unsigned program;
     Model* model = new Model();
     float4x4 modelMatrix = float4x4::identity;
-
+    float3 lookAtPoint;
 };
 

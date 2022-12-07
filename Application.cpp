@@ -16,14 +16,15 @@ Application::Application()
 {
 	// Order matters: they will Init/start/update in this order
 	modules.push_back(window = new ModuleWindow());
-	modules.push_back(program = new ModuleProgram());
 	modules.push_back(renderer = new ModuleRender());
-	modules.push_back(camera = new ModuleCamera());
 	modules.push_back(texture = new ModuleTexture());
-	modules.push_back(exercise = new ModuleRenderExercise());
+	modules.push_back(program = new ModuleProgram());
 	modules.push_back(input = new ModuleInput());
-	modules.push_back(debugDraw = new ModuleDebugDraw());
+	modules.push_back(camera = new ModuleCamera());
+	modules.push_back(exercise = new ModuleRenderExercise());
 	modules.push_back(editor = new ModuleEditor());
+	modules.push_back(debugDraw = new ModuleDebugDraw());
+	
 	
 }
 
@@ -47,17 +48,27 @@ bool Application::Init()
 
 update_status Application::Update()
 {
+	dt = (float)time.Read() / 1000.0f;
+	
+	ENGINE_LOG("GET TICKS: %.10f", dt);
+	time.Start();
+	
 	update_status ret = UPDATE_CONTINUE;
 
 	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
-		ret = (*it)->PreUpdate();
+		ret = (*it)->PreUpdate(dt);
 
 	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
-		ret = (*it)->Update();
+		ret = (*it)->Update(dt);
 
 	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
-		ret = (*it)->PostUpdate();
+		ret = (*it)->PostUpdate(dt);
 
+	if (dt < 1000 / 60) {
+		SDL_Delay(1000 / 60 - dt);
+	}
+
+	ENGINE_LOG("GET TICKS: %.10f", 1/dt);
 	return ret;
 }
 

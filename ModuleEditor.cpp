@@ -34,7 +34,7 @@ bool ModuleEditor::Init()
     return true;
 }
 
-update_status ModuleEditor::PreUpdate()
+update_status ModuleEditor::PreUpdate(float deltaTime)
 {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame(App->window->window);
@@ -48,11 +48,12 @@ update_status ModuleEditor::PreUpdate()
     distanceNearClippingPlane = App->camera->GetDistanceNearClippingPlane();
     distanceFarClippingPlane = App->camera->GetDistanceFarClippingPlane();
     rotationSpeed = App->camera->GetRotationSpeed();
+    cameraSpeedMultiplier = App->camera->GetCameraSpeedMultiplier();
 
     return UPDATE_CONTINUE;
 }
 
-update_status ModuleEditor::Update()
+update_status ModuleEditor::Update(float deltaTime)
 {
     /*
     if (ImGui::BeginMenu("Help")) {
@@ -70,7 +71,7 @@ update_status ModuleEditor::Update()
     if (ImGui::SliderFloat("Aspect Ratio", &aspectRatio, 1.0f, 2.0f)) {
         App->camera->SetAspectRatio(aspectRatio);
     }
-    if (ImGui::SliderFloat("Near Clipping Plane distance", &distanceNearClippingPlane, 0.1f, 5.0f)) {
+    if (ImGui::SliderFloat("Near Clipping Plane distance", &distanceNearClippingPlane, 0.15f, 5.0f)) {
         App->camera->SetPlaneDistances(distanceNearClippingPlane, distanceFarClippingPlane);
     }
     if (ImGui::SliderFloat("Far Clipping Plane distance", &distanceFarClippingPlane, 10.0f, 250.0f)) {
@@ -86,8 +87,23 @@ update_status ModuleEditor::Update()
         App->camera->SetPosition(pos);
     }
 
-    if (ImGui::SliderFloat("Rotation Speed", &rotationSpeed, 1.0f, 5.0f)) {
+    if (ImGui::SliderFloat("Rotation Speed", &rotationSpeed, 0.25f, 5.0f)) {
         App->camera->SetRotationSpeed(rotationSpeed);
+    }
+
+    if (ImGui::SliderFloat("Camera Multiplier Speed", &cameraSpeedMultiplier, 1.5f, 5.0f)) {
+        App->camera->SetCameraSpeedMultiplier(cameraSpeedMultiplier);
+    }
+
+    if (ImGui::CollapsingHeader("Time")) {
+        if (ImGui::Button("Start"))
+            timer.Start();
+        ImGui::SameLine();
+        if (ImGui::Button("Stop"))
+            timer.Stop();
+
+        ImGui::TextColored(ImVec4(0.5f, 1.0f, 1.0f, 1.00f), "Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+        ImGui::TextColored(ImVec4(0.5f, 1.0f, 1.0f, 1.00f), "Time %.2f ", timer.Read());
     }
     
     ImGui::Render();
@@ -95,7 +111,7 @@ update_status ModuleEditor::Update()
     return UPDATE_CONTINUE;
 }
 
-update_status ModuleEditor::PostUpdate()
+update_status ModuleEditor::PostUpdate(float deltaTime)
 {
     ImGui::EndFrame();
     return UPDATE_CONTINUE;

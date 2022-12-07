@@ -36,11 +36,12 @@ bool ModuleRenderExercise::Init()
     modelMatrix = float4x4::identity;
     
     model->Load("Assets/Textures/baker_house_model/BakerHouse.fbx");
-
+    lookAtPoint = model->GetCentreAABB();
+    ENGINE_LOG("LOOK AT: (X= %.6f, Y= %.6f, Z= %.6f)", lookAtPoint.x, lookAtPoint.y, lookAtPoint.z);
     return true;
 }
 
-update_status ModuleRenderExercise::Update()
+update_status ModuleRenderExercise::Update(float deltaTime)
 {
     //RenderTriangle();
 
@@ -78,11 +79,16 @@ float4x4 ModuleRenderExercise::GetModelMatrix() {
     
     return modelMatrix;
 }
+float3 ModuleRenderExercise::GetLookAtPoint() {
+
+    return lookAtPoint;
+}
 
 void ModuleRenderExercise::SetModel(const char* pathModel)
 {
     model->Clear();
     model->Load(pathModel);
+    lookAtPoint = model->GetCentreAABB();
     ENGINE_LOG("Model changed");
 }
 

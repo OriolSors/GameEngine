@@ -16,18 +16,18 @@ bool ModuleTexture::Init()
     return true;
 }
 
-update_status ModuleTexture::PreUpdate()
+update_status ModuleTexture::PreUpdate(float deltaTime)
 {
     return UPDATE_CONTINUE;
 }
 
-update_status ModuleTexture::Update()
+update_status ModuleTexture::Update(float deltaTime)
 {
 
     return UPDATE_CONTINUE;
 }
 
-update_status ModuleTexture::PostUpdate()
+update_status ModuleTexture::PostUpdate(float deltaTime)
 {
     return UPDATE_CONTINUE;
 }

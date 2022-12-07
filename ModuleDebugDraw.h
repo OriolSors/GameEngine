@@ -17,7 +17,7 @@ public:
     ~ModuleDebugDraw();
 
 	bool            Init();
-	update_status   Update();
+	update_status   Update(float deltaTime);
 	bool            CleanUp();
 
     void            Draw(const float4x4& view, const float4x4& proj, unsigned width, unsigned height);

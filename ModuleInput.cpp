@@ -30,50 +30,57 @@ bool ModuleInput::Init()
 	return ret;
 }
 
-update_status ModuleInput::PreUpdate() 
+update_status ModuleInput::PreUpdate(float deltaTime)
 {
     keyboard = SDL_GetKeyboardState(NULL);
+    
     return UPDATE_CONTINUE;
 }
 
 // Called every draw update
-update_status ModuleInput::Update()
+update_status ModuleInput::Update(float deltaTime)
 {
-
     SDL_Event sdlEvent;
 
     mouseWheel = 0;
     mouseMotion = float2::zero;
-    
+
     while (SDL_PollEvent(&sdlEvent) != 0)
     {
+
         ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
+
         switch (sdlEvent.type)
         {
-            case SDL_QUIT:
-                return UPDATE_STOP;
-            case SDL_WINDOWEVENT:
-                if (sdlEvent.window.event == SDL_WINDOWEVENT_RESIZED || sdlEvent.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
-                    App->renderer->WindowResized(sdlEvent.window.data1, sdlEvent.window.data2);
-                break;
-            case SDL_MOUSEWHEEL:
-                mouseWheel = sdlEvent.wheel.y;
-                break;
-            case SDL_MOUSEMOTION:
-                mouseMotion.x = sdlEvent.motion.x;
-                mouseMotion.y = sdlEvent.motion.y;
-                break;
-            case SDL_MOUSEBUTTONDOWN:
-                if (sdlEvent.button.button == SDL_BUTTON_RIGHT)right = true;
-                else right = false;
-                break;
-            case SDL_MOUSEBUTTONUP:
-                if (sdlEvent.button.button == SDL_BUTTON_RIGHT)right = false;
-                else right = true;
-                break;
-            case SDL_DROPFILE:
-                App->exercise->SetModel(sdlEvent.drop.file);
-                break;
+        case SDL_QUIT:
+            return UPDATE_STOP;
+        case SDL_WINDOWEVENT:
+            if (sdlEvent.window.event == SDL_WINDOWEVENT_RESIZED || sdlEvent.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+                App->renderer->WindowResized(sdlEvent.window.data1, sdlEvent.window.data2);
+            break;
+
+        case SDL_MOUSEWHEEL:
+            mouseWheel = sdlEvent.wheel.y;
+            break;
+            
+        case SDL_MOUSEBUTTONDOWN:
+            if (sdlEvent.button.button == SDL_BUTTON_RIGHT)rightClick = true;
+            else if (sdlEvent.button.button == SDL_BUTTON_LEFT)leftClick = true;
+            break;
+
+        case SDL_MOUSEBUTTONUP:
+            if (sdlEvent.button.button == SDL_BUTTON_RIGHT)rightClick = false;
+            else if (sdlEvent.button.button == SDL_BUTTON_LEFT)leftClick = false;
+            break;
+
+           
+        case SDL_MOUSEMOTION:
+            mouseMotion.x = -sdlEvent.motion.yrel;
+            mouseMotion.y = -sdlEvent.motion.xrel;
+            break;
+        case SDL_DROPFILE:
+            App->exercise->SetModel(sdlEvent.drop.file);
+            break;
         }
     }
 
@@ -100,6 +107,16 @@ int ModuleInput::GetWheel()
 
 float2 ModuleInput::GetMouseMotion() {
     return mouseMotion;
+}
+
+bool ModuleInput::IsRightClicked()
+{
+    return rightClick;
+}
+
+bool ModuleInput::IsLeftClicked()
+{
+    return leftClick;
 }
 
 

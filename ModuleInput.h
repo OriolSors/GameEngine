@@ -14,19 +14,22 @@ public:
 	~ModuleInput();
 
 	bool Init();
-	update_status PreUpdate();
-	update_status Update();
+	update_status PreUpdate(float deltaTime);
+	update_status Update(float deltaTime);
 	bool CleanUp();
 
 	Uint8 GetKey(int key);
 	int GetWheel();
 	float2 GetMouseMotion();
 
+	bool IsRightClicked();
+	bool IsLeftClicked();
+
 private:
 	const Uint8 *keyboard = NULL;
-	int mouseWheel = NULL;
-	float2 mouseMotion;
+	int mouseWheel = 0;
+	float2 mouseMotion = float2::zero;
 
-public:
-	bool right = false;
+	bool rightClick = false;
+	bool leftClick = false;
 };

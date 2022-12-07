@@ -606,7 +606,7 @@ bool ModuleDebugDraw::CleanUp()
     return true;
 }
 
-update_status  ModuleDebugDraw::Update()
+update_status  ModuleDebugDraw::Update(float deltaTime)
 {
 	return UPDATE_CONTINUE;
 }

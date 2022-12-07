@@ -25,6 +25,7 @@ int main(int argc, char ** argv)
 
 	while (state != MAIN_EXIT)
 	{
+
 		switch (state)
 		{
 		case MAIN_CREATION:
@@ -80,7 +81,6 @@ int main(int argc, char ** argv)
 			break;
 
 		}
-
 	}
 
 	delete App;
