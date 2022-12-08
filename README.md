@@ -1,5 +1,5 @@
 # GameEngine
-Game engine created for the Master's Degree in Advanced Programming for AAA Videogames.
+Game Engine created for the UPC Master's Degree in Advanced Programming for AAA Videogames.
 Link: https://github.com/OriolSors/GameEngine
 # Authors 
 Oriol Sors Vidal
