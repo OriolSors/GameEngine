@@ -138,3 +138,7 @@ float3 Model::GetCentreAABB()
 {
 	return boundingBox.CenterPoint();
 }
+
+float Model::GetDiagonalAABB() {
+	return boundingBox.Diagonal().Length();
+}

@@ -2,6 +2,7 @@
 #include "Module.h"
 #include "Game/MathGeoLib/Geometry/frustum.h"
 #include "Game/MathGeoLib/Math/float4x4.h"
+#include "Model.h"
 
 class ModuleCamera :
     public Module
@@ -30,6 +31,7 @@ public:
 	void Translate(const vec& direction);
 	void Rotate(const vec& rotation);
 	void LookAt(const vec& point);
+	void Focus(Model* model);
 	void RotateAround(const float2& rotationAround);
 
 	void SetHorizontalFOV(float hFOV);

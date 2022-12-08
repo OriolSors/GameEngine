@@ -19,7 +19,6 @@ public:
 
     unsigned GetProgram();
     float4x4 GetModelMatrix();
-    float3 GetLookAtPoint();
 
     void SetModel(const char* pathModel);
 
@@ -27,6 +26,5 @@ private:
     unsigned program;
     Model* model = new Model();
     float4x4 modelMatrix = float4x4::identity;
-    float3 lookAtPoint;
 };
 

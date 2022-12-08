@@ -20,6 +20,7 @@ public:
 	std::string GetFilename(const std::string& fname);
 
 	float3 GetCentreAABB();
+	float GetDiagonalAABB();
 
 private:
 	std::vector<Mesh*> meshes;
