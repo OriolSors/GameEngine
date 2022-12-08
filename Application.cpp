@@ -9,7 +9,6 @@
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
 #include "ModuleTexture.h"
-#include <GL/wglew.h>
 
 using namespace std;
 
@@ -25,8 +24,7 @@ Application::Application()
 	modules.push_back(exercise = new ModuleRenderExercise());
 	modules.push_back(editor = new ModuleEditor());
 	modules.push_back(debugDraw = new ModuleDebugDraw());
-	
-	
+
 }
 
 Application::~Application()
@@ -50,36 +48,34 @@ bool Application::Init()
 
 update_status Application::Update()
 {
-	
-
-	dt = (float)time.Read() / 1000.0f;
+	RetrieveGPUInfo();
+	dt = (float)time.DeltaTime() / 1000.0f;
 	time.Start();
 	
 	update_status ret = UPDATE_CONTINUE;
 
-	if (dt > 0) {
-		for (list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
-			ret = (*it)->PreUpdate(dt);
+	
+	for (list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
+		ret = (*it)->PreUpdate(dt);
 
-		for (list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
-			ret = (*it)->Update(dt);
+	for (list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
+		ret = (*it)->Update(dt);
 
-		for (list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
-			ret = (*it)->PostUpdate(dt);
-	}
+	for (list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
+		ret = (*it)->PostUpdate(dt);
+
 
 	if (limFPS)
 	{
-		unsigned int frameMS = time.Read();
+		unsigned int frameMS = time.DeltaTime();
 		unsigned int minMS = 1000 / maxFPS;
-		if (frameMS < minMS)
+		if (frameMS < minMS) 
 		{
-			SDL_Delay(minMS - frameMS);
+			SDL_Delay(minMS - frameMS); //waiting until we reach the minimum ms for the frame
 		}
 	}
 
-	editor->PlotFPS(1.0f / dt, dt*1000.0f);
-	//ENGINE_LOG("FPS: %.10f, MS: %.10f", 1.0f/dt, dt*1000.0f);
+	editor->PlotFPS(1.0f / dt, dt * 1000.0f); //sending the average FPS and ms to Editor
 	return ret;
 }
 
@@ -113,7 +109,6 @@ void Application::RetrieveHardwareInfo() {
 	caps[8] = SDL_HasSSE3();
 	caps[9] = SDL_HasSSE41();
 	caps[10] = SDL_HasSSE42();
-
 }
 
 void Application::RetrieveGPUInfo()

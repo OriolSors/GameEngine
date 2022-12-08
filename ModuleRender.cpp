@@ -9,7 +9,6 @@
 ModuleRender::ModuleRender()
 {
 
-	
 }
 
 // Destructor

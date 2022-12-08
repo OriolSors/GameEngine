@@ -6,18 +6,13 @@ class Timer
 {
 public:
 
-	// Constructor
 	Timer();
 
 	void Start();
-	void Stop();
-
-	Uint32 Read();
+	Uint32 DeltaTime();
 
 private:
 
-	bool	running;
-	Uint32	started_at;
-	Uint32	stopped_at;
+	Uint32 timeStart;
 };
 

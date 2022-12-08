@@ -24,6 +24,8 @@ ModuleEditor::ModuleEditor()
 
 ModuleEditor::~ModuleEditor()
 {
+    fpsLOG.clear();
+    msLOG.clear();
 }
 
 bool ModuleEditor::Init()
@@ -37,8 +39,6 @@ bool ModuleEditor::Init()
     ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer->context);
     ImGui_ImplOpenGL3_Init(GLSL_VERSION);
 
-    //fpsLOG.reserve(FPS_LOG_SIZE);
-    //msLOG.reserve(FPS_LOG_SIZE);
     return true;
 }
 
@@ -47,10 +47,6 @@ update_status ModuleEditor::PreUpdate(float deltaTime)
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame(App->window->window);
     ImGui::NewFrame();
-
-    //ImGui::ShowDemoWindow();
-
-    
 
     return UPDATE_CONTINUE;
 }
@@ -64,8 +60,6 @@ update_status ModuleEditor::Update(float deltaTime)
     float distanceFarClippingPlane = App->camera->GetDistanceFarClippingPlane();
     float rotationSpeed = App->camera->GetRotationSpeed();
     float cameraSpeedMultiplier = App->camera->GetCameraSpeedMultiplier();
-
-    Timer timer;
 
     ImGui::BeginMainMenuBar();
     if (ImGui::BeginMenu("Configuration"))
@@ -113,8 +107,6 @@ update_status ModuleEditor::Update(float deltaTime)
             ImGui::SameLine();
             ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0), "%i", App->maxFPS);
 
-
-            
             char title[25];
             sprintf_s(title, 25, "Framerate %.1f", fpsLOG[fpsLOG.size()-1]);
             ImGui::PlotHistogram("##framerate", &fpsLOG[0], fpsLOG.size(), fpsIndexLOG, title, 0.0f, 100.0f, ImVec2(310, 100));
@@ -124,14 +116,18 @@ update_status ModuleEditor::Update(float deltaTime)
             
         }
         if (ImGui::CollapsingHeader("Window")) {
+            int w = App->window->GetWidth();
+            int h = App->window->GetHeight();
+
             float brightness = App->window->GetBrightness();
+
+            bool fullscreen = App->window->IsFullscreen();
+            bool resizable = App->window->IsResizable();
+            bool borderless = App->window->IsBorderless();
+            bool fullScreenDesktop = App->window->IsFullScreenDesktop();
+
             if (ImGui::SliderFloat("Brightness", &brightness, 0.0f, 1.0f))
                 App->window->SetBrightness(brightness);
-
-            int w, h;
-
-            w = App->window->GetWidth();
-            h = App->window->GetHeight();
 
             if (ImGui::SliderInt("Width", &w, 640, 4096))
                 App->window->SetWidth(w);
@@ -143,15 +139,11 @@ update_status ModuleEditor::Update(float deltaTime)
             ImGui::SameLine();
             ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0), "%i", App->window->GetRefreshRate());
 
-            bool fullscreen = App->window->IsFullscreen();
-            bool resizable = App->window->IsResizable();
-            bool borderless = App->window->IsBorderless();
-            bool fullScreenDesktop = App->window->IsFullScreenDesktop();
-
             if (ImGui::Checkbox("Fullscreen", &fullscreen))
                 App->window->SetFullscreen(fullscreen);
 
             ImGui::SameLine();
+
             if (ImGui::Checkbox("Resizable", &resizable))
                 App->window->SetResizable(resizable);
             if (ImGui::IsItemHovered())
@@ -161,6 +153,7 @@ update_status ModuleEditor::Update(float deltaTime)
                 App->window->SetBorderless(borderless);
 
             ImGui::SameLine();
+
             if (ImGui::Checkbox("Full Desktop", &fullScreenDesktop))
                 App->window->SetFullScreenDesktop(fullScreenDesktop);
         }
@@ -170,15 +163,16 @@ update_status ModuleEditor::Update(float deltaTime)
             ImGui::SameLine();
             ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0), App->sdlVersion);
             
-
             ImGui::Separator();
 
             ImGui::Text("CPUs:");
             ImGui::SameLine();
             ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0), "%i (Cache: %i kb)", App->numCPU, App->sizeCache);
+
             ImGui::Text("System RAM:");
             ImGui::SameLine();
             ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0), "%.1f Gb", App->sizeRam);
+
             ImGui::Text("Caps:");
             const char* caps[] =
             {
@@ -201,7 +195,7 @@ update_status ModuleEditor::Update(float deltaTime)
                     ImGui::SameLine();
                     ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0), caps[i]);
                 }
-                if (i == 4) ImGui::Text("");
+                
             }
 
             ImGui::Separator();
@@ -209,21 +203,27 @@ update_status ModuleEditor::Update(float deltaTime)
             ImGui::Text("GPU:");
             ImGui::SameLine();
             ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0), "%s", glGetString(GL_VENDOR));
+
             ImGui::Text("Brand:");
             ImGui::SameLine();
             ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0), "%s", glGetString(GL_RENDERER));
+
             ImGui::Text("GPU OpenGL Version:");
             ImGui::SameLine();
             ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0), "%s", glGetString(GL_VERSION));
+
             ImGui::Text("VRAM Budget:");
             ImGui::SameLine();
             ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0), "%.1f Mb", App->vramBudget);
+
             ImGui::Text("VRAM Usage:");
             ImGui::SameLine();
             ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0), "%.1f Mb", App->vramUsage);
+
             ImGui::Text("VRAM Available:");
             ImGui::SameLine();
             ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0), "%.1f Mb", App->vramAvailable);
+
             ImGui::Text("VRAM Reserved:");
             ImGui::SameLine();
             ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0), "%.1f Mb", App->vramReserved);
@@ -246,45 +246,46 @@ update_status ModuleEditor::Update(float deltaTime)
         }
         if (ImGui::CollapsingHeader("Geometry")) {
             Model& model = App->exercise->GetModel();
-            unsigned mesh_index = 0;
+            unsigned meshIndex = 0;
             for (Mesh* mesh : model.GetMeshes())
             {
-                char mesh_name[32];
-                sprintf(mesh_name, "Mesh %i", mesh_index);
-                if (ImGui::TreeNode(mesh_name))
+                char meshName[20];
+                sprintf(meshName, "Mesh %i", meshIndex);
+                if (ImGui::TreeNode(meshName))
                 {
                     ImGui::Text("Vertices:");
                     ImGui::SameLine();
                     ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0), "%i", mesh->GetNumVertices());
+
                     ImGui::Text("Triangles:");
                     ImGui::SameLine();
-                    ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0), "%i", mesh->GetNumIndices() / 3);
+                    ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0), "%i", mesh->GetNumIndices() / 3); //triangles = 3 indices per face
 
                     ImGui::TreePop();
                 }
-                mesh_index += 1;
+                meshIndex += 1;
             }
 
             vec center = model.GetCentreAABB();
-            float diagonal = model.GetDiagonalAABB();
             ImGui::InputFloat3("Bounding Box Center", center.ptr(), "%.3f", ImGuiInputTextFlags_ReadOnly);
+
+            float diagonal = model.GetDiagonalAABB();
             ImGui::Text("Diagonal:");
             ImGui::SameLine();
             ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0), "%.3f", diagonal);
         }
         if (ImGui::CollapsingHeader("Texture")) {
             Model& model = App->exercise->GetModel();
-            unsigned material_index = 0;
+            unsigned materialIndex = 0;
             for (unsigned material : model.GetMaterials())
             {
-                char material_name[32];
-                sprintf(material_name, "Material %i", material_index);
-                if (ImGui::TreeNode(material_name))
+                char materialName[20];
+                sprintf(materialName, "Material %i", materialIndex);
+                if (ImGui::TreeNode(materialName))
                 {
-                    int width;
-                    int height;
-                    glGetTextureLevelParameteriv(model.GetMaterials()[material_index], 0, GL_TEXTURE_WIDTH, &width);
-                    glGetTextureLevelParameteriv(model.GetMaterials()[material_index], 0, GL_TEXTURE_HEIGHT, &height);
+                    int width = model.GetWidthMaterials()[materialIndex];
+                    int height = model.GetHeightMaterials()[materialIndex];
+                   
 
                     ImGui::Text("Width: ");
                     ImGui::SameLine();
@@ -292,12 +293,12 @@ update_status ModuleEditor::Update(float deltaTime)
                     ImGui::Text("Height: ");
                     ImGui::SameLine();
                     ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0), "%i", height);
-                    ImGui::Image((void*)model.GetMaterials()[material_index], ImVec2(200, 200));
+                    ImGui::Image((void*)model.GetMaterials()[materialIndex], ImVec2(200, 200));
 
                     ImGui::TreePop();
                 }
 
-                material_index += 1;
+                materialIndex += 1;
             }
         }
         ImGui::EndMenu();
@@ -365,7 +366,7 @@ bool ModuleEditor::CleanUp()
 
 void ModuleEditor::PlotFPS(float fps, float ms) {
 
-    if (fpsCounter == FPS_LOG_SIZE)
+    if (fpsCounter == MAX_LOG)
     {
         fpsLOG.erase(fpsLOG.begin());
         msLOG.erase(msLOG.begin());

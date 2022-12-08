@@ -42,12 +42,11 @@ public:
 	ModuleTexture* texture = nullptr;
 
 
-	//APPLICATION WINDOW INFO
+	//----- APPLICATION WINDOW INFO -----
 	char windowName[25] = "Super Awesome Engine";
 	char organization[10] = "UPC";
 	int maxFPS = 60;
 	bool limFPS = true;
-	bool vsync = true;
 
 	const char* appName = "Super Awesome Engine";
 	const char* description = "Game Engine";
@@ -56,8 +55,7 @@ public:
 	const char* license = "MIT";
 
 
-	//HARDWARE WINDOW INFO
-
+	//----- HARDWARE WINDOW INFO -----
 	char sdlVersion[20];
 	
 	int numCPU;

@@ -16,7 +16,7 @@ public:
 	update_status PostUpdate(float deltaTime);
 	bool CleanUp();
 
-	bool Load(const char* textureFile);
+	bool Load(const char* textureFile, int& w, int& h);
 
 public:
 	GLuint texture_object;

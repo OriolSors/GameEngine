@@ -38,7 +38,7 @@ bool ModuleTexture::CleanUp()
     return true;
 }
 
-bool ModuleTexture::Load(const char* textureFile) 
+bool ModuleTexture::Load(const char* textureFile, int& w, int& h)
 {
     auto img = new DirectX::ScratchImage();
 
@@ -91,11 +91,14 @@ bool ModuleTexture::Load(const char* textureFile)
             assert(false && "Unsupported format");
     }
 
+    w = md.width;
+    h = md.height;
     glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, md.width, md.height, 0, format, type, destImg->GetPixels());
     glGenerateMipmap(GL_TEXTURE_2D);
     
     delete img;
     delete destImg;
+    delete vOut;
 
     return true;
 }

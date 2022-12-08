@@ -11,14 +11,10 @@ class ModuleWindow : public Module
 public:
 
 	ModuleWindow();
-
-	// Destructor
 	virtual ~ModuleWindow();
 
-	// Called before quitting
 	bool Init();
 
-	// Called before quitting
 	bool CleanUp();
 
 	float GetBrightness();

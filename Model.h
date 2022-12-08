@@ -24,10 +24,14 @@ public:
 
 	const std::vector<Mesh*>& GetMeshes() { return meshes; }
 	const std::vector<GLuint>& GetMaterials() { return materials; }
+	const std::vector<int>& GetWidthMaterials() { return materialsWidth; }
+	const std::vector<int>& GetHeightMaterials() { return materialsHeight; }
 
 private:
 	std::vector<Mesh*> meshes;
 	std::vector<GLuint> materials;
+	std::vector<int> materialsWidth;
+	std::vector<int> materialsHeight;
 
 	AABB boundingBox;
 

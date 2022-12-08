@@ -121,17 +121,18 @@ void ModuleWindow::SetHeigth(int h)
 
 int ModuleWindow::GetRefreshRate()
 {
-	int ret = 0;
+	int refreshRate = 0;
 
-	SDL_DisplayMode dm;
-	if (SDL_GetDesktopDisplayMode(0, &dm) != 0) {
+	SDL_DisplayMode displayMode;
+	if (SDL_GetDesktopDisplayMode(0, &displayMode) != 0) {
 		ENGINE_LOG("SDL_GetDesktopDisplayMode failed: %s", SDL_GetError());
 	}
 		
-	else
-		ret = dm.refresh_rate;
+	else {
+		refreshRate = displayMode.refresh_rate;
+	}
 
-	return ret;
+	return refreshRate;
 }
 
 bool ModuleWindow::IsFullscreen()

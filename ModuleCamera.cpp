@@ -61,12 +61,14 @@ update_status ModuleCamera::Update(float deltaTime)
 
 		Translate(direction *  deltaTime * cameraSpeed);
 
-
+		vec rotation = vec::zero;
 		float2 mouseRotation(App->input->GetMouseMotion());
-		vec rotation(mouseRotation.x, mouseRotation.y, 0.0f);
+		rotation = vec (mouseRotation.x, mouseRotation.y, 0.0f);
+		
 
 		Rotate(rotation * deltaTime * rotationSpeed);
 	}
+
 
 	if (App->input->GetKey(SDL_SCANCODE_LALT) && App->input->IsLeftClicked() ) {
 		
@@ -165,22 +167,24 @@ void ModuleCamera::LookAt(const vec& point) {
 }
 
 void ModuleCamera::Focus(Model* model) {
+	frustum.SetPos(float3(0.0f, 1.0f, 12.0f)); //fix the camera in a default Position
 	LookAt(model->GetCentreAABB());
 	float3 currentPos = frustum.Pos();
+
+	Translate(vec(0.0f, lookAtPoint.y - currentPos.y, 0.0f)); //put the camera in the same height as the model
+	LookAt(lookAtPoint);
+
+	currentPos = frustum.Pos();
 
 	float distanceToCenter = (lookAtPoint - currentPos).Length();
 	float modelDiagonal = model->GetDiagonalAABB();
 
 	float ratio = distanceToCenter / modelDiagonal;
-	float lambda = 1.0f / ratio;
+	float lambda = 1.0f / ratio; //we get closer if the distance to the center is bigger than the model diagonal; otherwise if diagonal is bigger
 	if (ratio > 1.0f) {
-		Translate(vec(0.0f, lookAtPoint.y - currentPos.y, 0.0f));
-		LookAt(lookAtPoint);
 		Translate(frustum.Front().Normalized() * lambda* distanceToCenter);
 	}
 	else {
-		Translate(vec(0.0f, lookAtPoint.y - currentPos.y, 0.0f));
-		LookAt(lookAtPoint);
 		Translate(-frustum.Front().Normalized() * lambda* distanceToCenter);
 	}
 

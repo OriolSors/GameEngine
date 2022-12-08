@@ -14,7 +14,14 @@ Model::Model()
 
 Model::~Model()
 {
+	for (std::vector<Mesh*>::iterator it = meshes.begin(); it != meshes.end(); ++it)
+	{
+		delete* it;
+	}
 	meshes.clear();
+	materials.clear();
+	materialsHeight.clear();
+	materialsWidth.clear();
 }
 
 void Model::Load(const char* file_name)
@@ -52,22 +59,32 @@ void Model::LoadMaterials(const aiScene* scene)
 
 			directory.append(fileName);
 			textureDir.append(fileName);
-			
-			if (App->texture->Load(file.data)) 
+			int w, h;
+			if (App->texture->Load(file.data, w, h)) 
 			{ 
 				ENGINE_LOG("Loading texture in path: %s", file.data);
 				materials.push_back(App->texture->texture_object);
+				materialsWidth.push_back(w);
+				materialsHeight.push_back(h);
+
 			}
-			else if (App->texture->Load(directory.c_str())) 
+			else if (App->texture->Load(directory.c_str(), w, h))
 			{ 
 				ENGINE_LOG("Loading texture in path: %s", directory.c_str());
 				materials.push_back(App->texture->texture_object);
+				materialsWidth.push_back(w);
+				materialsHeight.push_back(h);
+
 			}
-			else if (App->texture->Load(textureDir.c_str()))
+			else if (App->texture->Load(textureDir.c_str(), w, h))
 			{ 
 				ENGINE_LOG("Loading texture in path: %s", textureDir.c_str());
 				materials.push_back(App->texture->texture_object); 
+				materialsWidth.push_back(w);
+				materialsHeight.push_back(h);
+
 			}
+			
 		}
 	}
 	
@@ -101,6 +118,8 @@ void Model::LoadMeshes(const aiScene* scene)
 		boundingBox.Enclose(vertices, mMesh->mNumVertices);
 		
 		meshes.push_back(mesh);
+
+		delete vertices;
 	}
 }
 
@@ -118,22 +137,6 @@ void Model::Clear()
 	materials.clear();
 }
 
-std::string Model::GetDirectory(const std::string& fname)
-{
-	size_t pos = fname.find_last_of("\\/");
-	return (std::string::npos == pos)
-		? ""
-		: fname.substr(0, pos+1);
-}
-
-std::string Model::GetFilename(const std::string& fname)
-{
-	size_t pos = fname.find_last_of("\\/");
-	return (std::string::npos == pos)
-		? fname
-		: fname.substr(pos + 1, fname.size()-1);
-}
-
 float3 Model::GetCentreAABB()
 {
 	return boundingBox.CenterPoint();
@@ -142,3 +145,22 @@ float3 Model::GetCentreAABB()
 float Model::GetDiagonalAABB() {
 	return boundingBox.Diagonal().Length();
 }
+
+/*Useful functions for getting the directory of a certain file, or the file name in certain path*/
+std::string Model::GetDirectory(const std::string& filename)
+{
+	size_t pos = filename.find_last_of("\\/");
+	return (std::string::npos == pos)
+		? ""
+		: filename.substr(0, pos+1);
+}
+
+std::string Model::GetFilename(const std::string& filename)
+{
+	size_t pos = filename.find_last_of("\\/");
+	return (std::string::npos == pos)
+		? filename
+		: filename.substr(pos + 1, filename.size()-1);
+}
+
+
