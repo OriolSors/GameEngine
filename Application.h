@@ -27,6 +27,9 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	void RetrieveHardwareInfo();
+	void RetrieveGPUInfo();
+
 public:
 	ModuleRender* renderer = nullptr;
 	ModuleWindow* window = nullptr;
@@ -37,6 +40,37 @@ public:
 	ModuleCamera* camera = nullptr;
 	ModuleEditor* editor = nullptr;
 	ModuleTexture* texture = nullptr;
+
+
+	//APPLICATION WINDOW INFO
+	char windowName[25] = "Super Awesome Engine";
+	char organization[10] = "UPC";
+	int maxFPS = 60;
+	bool limFPS = true;
+	bool vsync = true;
+
+	const char* appName = "Super Awesome Engine";
+	const char* description = "Game Engine";
+	const char* author = "Oriol Sors";
+	const char* libraries = "GLEW, SDL2, MathGeoLib, ImGuI, DirectXTex, assimp";
+	const char* license = "MIT";
+
+
+	//HARDWARE WINDOW INFO
+
+	char sdlVersion[20];
+	
+	int numCPU;
+	int sizeCache;
+	float sizeRam;
+	bool caps[11];
+
+	float vramBudget;
+	float vramUsage;
+	float vramAvailable;
+	float vramReserved;
+
+
 private:
 
 	Timer time;

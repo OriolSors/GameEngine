@@ -17,6 +17,10 @@ public:
 	void SetNumVertices(unsigned num_vertices);
 	void SetNumIndices(unsigned num_indices);
 
+	unsigned GetMaterialIndex() { return material_index; }
+	unsigned GetNumVertices() { return num_vertices; }
+	unsigned GetNumIndices() { return num_indices; }
+
 private:
 	unsigned vbo;
 	unsigned ebo;

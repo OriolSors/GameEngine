@@ -219,6 +219,7 @@
     <ClCompile Include="Game\MathGeoLib\Math\SSEMath.cpp" />
     <ClCompile Include="Game\MathGeoLib\Math\TransformOps.cpp" />
     <ClCompile Include="Game\MathGeoLib\Time\Clock.cpp" />
+    <ClCompile Include="Globals.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Mesh.cpp" />

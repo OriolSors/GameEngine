@@ -22,6 +22,9 @@ public:
 	float3 GetCentreAABB();
 	float GetDiagonalAABB();
 
+	const std::vector<Mesh*>& GetMeshes() { return meshes; }
+	const std::vector<GLuint>& GetMaterials() { return materials; }
+
 private:
 	std::vector<Mesh*> meshes;
 	std::vector<GLuint> materials;

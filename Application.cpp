@@ -9,6 +9,7 @@
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
 #include "ModuleTexture.h"
+#include <GL/wglew.h>
 
 using namespace std;
 
@@ -38,6 +39,7 @@ Application::~Application()
 
 bool Application::Init()
 {
+	RetrieveHardwareInfo();
 	bool ret = true;
 
 	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
@@ -48,27 +50,36 @@ bool Application::Init()
 
 update_status Application::Update()
 {
-	dt = (float)time.Read() / 1000.0f;
 	
-	ENGINE_LOG("GET TICKS: %.10f", dt);
+
+	dt = (float)time.Read() / 1000.0f;
 	time.Start();
 	
 	update_status ret = UPDATE_CONTINUE;
 
-	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
-		ret = (*it)->PreUpdate(dt);
+	if (dt > 0) {
+		for (list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
+			ret = (*it)->PreUpdate(dt);
 
-	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
-		ret = (*it)->Update(dt);
+		for (list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
+			ret = (*it)->Update(dt);
 
-	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
-		ret = (*it)->PostUpdate(dt);
-
-	if (dt < 1000 / 60) {
-		SDL_Delay(1000 / 60 - dt);
+		for (list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
+			ret = (*it)->PostUpdate(dt);
 	}
 
-	ENGINE_LOG("GET TICKS: %.10f", 1/dt);
+	if (limFPS)
+	{
+		unsigned int frameMS = time.Read();
+		unsigned int minMS = 1000 / maxFPS;
+		if (frameMS < minMS)
+		{
+			SDL_Delay(minMS - frameMS);
+		}
+	}
+
+	editor->PlotFPS(1.0f / dt, dt*1000.0f);
+	//ENGINE_LOG("FPS: %.10f, MS: %.10f", 1.0f/dt, dt*1000.0f);
 	return ret;
 }
 
@@ -80,4 +91,39 @@ bool Application::CleanUp()
 		ret = (*it)->CleanUp();
 
 	return ret;
+}
+
+void Application::RetrieveHardwareInfo() {
+	SDL_version sdlVersion;
+	SDL_GetVersion(&sdlVersion);
+
+	sprintf_s(this->sdlVersion, "%i.%i.%i", sdlVersion.major, sdlVersion.minor, sdlVersion.patch);
+
+	numCPU = SDL_GetCPUCount();
+	sizeCache = SDL_GetCPUCacheLineSize();
+	sizeRam = SDL_GetSystemRAM() / 1000.0f;
+	caps[0] = SDL_Has3DNow();
+	caps[1] = SDL_HasAltiVec();
+	caps[2] = SDL_HasAVX();
+	caps[3] = SDL_HasAVX2();
+	caps[4] = SDL_HasMMX();
+	caps[5] = SDL_HasRDTSC();
+	caps[6] = SDL_HasSSE();
+	caps[7] = SDL_HasSSE2();
+	caps[8] = SDL_HasSSE3();
+	caps[9] = SDL_HasSSE41();
+	caps[10] = SDL_HasSSE42();
+
+}
+
+void Application::RetrieveGPUInfo()
+{
+	int vramBudgetKb;
+	int vramAvailableKb;
+	glGetIntegerv(GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX, &vramBudgetKb);
+	glGetIntegerv(GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, &vramAvailableKb);
+	vramBudget = vramBudgetKb / 1000.0f;
+	vramAvailable = vramAvailableKb / 1000.0f;
+	vramUsage = vramBudget - vramAvailable;
+
 }

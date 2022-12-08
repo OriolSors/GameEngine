@@ -20,6 +20,7 @@ public:
     unsigned GetProgram();
     float4x4 GetModelMatrix();
 
+    Model& GetModel() { return *model; }
     void SetModel(const char* pathModel);
 
 private:

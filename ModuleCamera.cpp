@@ -174,15 +174,16 @@ void ModuleCamera::Focus(Model* model) {
 	float ratio = distanceToCenter / modelDiagonal;
 	float lambda = 1.0f / ratio;
 	if (ratio > 1.0f) {
-		
-		Translate(-frustum.Front().Normalized() * lambda* distanceToCenter);
-	}
-	else {
+		Translate(vec(0.0f, lookAtPoint.y - currentPos.y, 0.0f));
+		LookAt(lookAtPoint);
 		Translate(frustum.Front().Normalized() * lambda* distanceToCenter);
 	}
+	else {
+		Translate(vec(0.0f, lookAtPoint.y - currentPos.y, 0.0f));
+		LookAt(lookAtPoint);
+		Translate(-frustum.Front().Normalized() * lambda* distanceToCenter);
+	}
 
-	LookAt(lookAtPoint);
-	
 }
 
 void ModuleCamera::RotateAround(const float2& rotationAround) {
