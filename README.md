@@ -9,6 +9,6 @@ Oriol Sors Vidal
 - Use the Mouse Wheel to zoom in or zoom out
 - Left Alt + Left-Click with the mouse for rotate around the model
 - Press 'F' to focus the Model
-# Editor GUi
+# Editor GUI
 - Modify Window, Camera and Framerate properties
 - Find information about the Hardware, Texture, Geometry and Transformation
