@@ -167,26 +167,21 @@ void ModuleCamera::LookAt(const vec& point) {
 }
 
 void ModuleCamera::Focus(Model* model) {
-	frustum.SetPos(float3(0.0f, 1.0f, 12.0f)); //fix the camera in a default Position
-	LookAt(model->GetCentreAABB());
-	float3 currentPos = frustum.Pos();
 
-	Translate(vec(0.0f, lookAtPoint.y - currentPos.y, 0.0f)); //put the camera in the same height as the model
+	float desiredRatio = 1.0f; //ratio desired, value R
+	float3 centreAABB = model->GetCentreAABB(); //Point C
+	Translate(vec(0.0f, centreAABB.y - frustum.Pos().y, 0.0f)); //put the camera in the same height as the model
+	LookAt(centreAABB);
+
+	float3 currentPos = frustum.Pos(); //Point P
+	float distanceToCenter = (lookAtPoint - currentPos).Length(); //Value d
+	float modelDiagonal = model->GetDiagonalAABB(); //Value D
+	float currentRatio = distanceToCenter / modelDiagonal; //Value current ratio, value Mu
+
+	float lambdaCorrector = desiredRatio / currentRatio - 1; // Value Lambda
+	Translate(-lambdaCorrector * (lookAtPoint - currentPos)); //P1 = P - Lambda * Vec(PC) (we assume Lambda > 0 is moving away from the AABB centre)
+
 	LookAt(lookAtPoint);
-
-	currentPos = frustum.Pos();
-
-	float distanceToCenter = (lookAtPoint - currentPos).Length();
-	float modelDiagonal = model->GetDiagonalAABB();
-
-	float ratio = distanceToCenter / modelDiagonal;
-	float lambda = 1.0f / ratio; //we get closer if the distance to the center is bigger than the model diagonal; otherwise if diagonal is bigger
-	if (ratio > 1.0f) {
-		Translate(frustum.Front().Normalized() * lambda* distanceToCenter);
-	}
-	else {
-		Translate(-frustum.Front().Normalized() * lambda* distanceToCenter);
-	}
 
 }
 

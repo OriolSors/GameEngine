@@ -24,8 +24,8 @@ ModuleRenderExercise::~ModuleRenderExercise()
 
 bool ModuleRenderExercise::Init()
 {  
-    const char* v_shader_file = App->program->Load("HelloWorld_vs.glsl");
-    const char* f_shader_file = App->program->Load("HelloWorld_fs.glsl");
+    const char* v_shader_file = App->program->Load("Assets/HelloWorld_vs.glsl");
+    const char* f_shader_file = App->program->Load("Assets/HelloWorld_fs.glsl");
 
     unsigned v_shader = App->program->CompileShader(GL_VERTEX_SHADER, v_shader_file);
     unsigned f_shader = App->program->CompileShader(GL_FRAGMENT_SHADER, f_shader_file);
